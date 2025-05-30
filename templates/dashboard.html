@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - EVS Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            EVS Manager Dashboard
+        </h1>
+        <div class="text-muted">
+            <i class="fas fa-clock me-1"></i>
+            Last updated: <span id="lastUpdated">{{ moment().format('MMM DD, YYYY - h:mm A') }}</span>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title text-primary">Total Tasks</h5>
+                            <h2 class="mb-0">{{ stats.total_tasks or 0 }}</h2>
+                        </div>
+                        <div class="text-primary">
+                            <i class="fas fa-tasks fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title text-warning">Pending Tasks</h5>
+                            <h2 class="mb-0">{{ stats.pending_tasks or 0 }}</h2>
+                        </div>
+                        <div class="text-warning">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-danger">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title text-danger">High Priority</h5>
+                            <h2 class="mb-0">{{ stats.high_priority_messages or 0 }}</h2>
+                        </div>
+                        <div class="text-danger">
+                            <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title text-info">Upcoming Events</h5>
+                            <h2 class="mb-0">{{ stats.upcoming_events or 0 }}</h2>
+                        </div>
+                        <div class="text-info">
+                            <i class="fas fa-calendar fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- High Priority Messages -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                        High Priority Messages
+                    </h5>
+                    <a href="{{ url_for('messages', priority='High') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if high_priority_messages %}
+                        {% for message in high_priority_messages %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>{{ message.sender }}</strong>
+                                    <span class="badge bg-danger ms-2">{{ message.priority }}</span>
+                                    <p class="mb-1 text-muted small">{{ message.content[:100] }}{% if message.content|length > 100 %}...{% endif %}</p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>
+                                        {{ message.created_at.strftime('%m/%d %I:%M %p') }}
+                                    </small>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Action
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" onclick="createTaskFromMessage({{ message.id }})">Create Task</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="createEventFromMessage({{ message.id }})">Add to Calendar</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="assignStaff({{ message.id }})">Assign Staff</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#" onclick="markProcessed({{ message.id }})">Mark Processed</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-check-circle fa-2x mb-2"></i>
+                            <p>No high priority messages at this time</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Tasks -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tasks text-warning me-2"></i>
+                        Pending Tasks
+                    </h5>
+                    <a href="{{ url_for('tasks') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if pending_tasks %}
+                        {% for task in pending_tasks %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>{{ task.title }}</strong>
+                                    <span class="badge bg-{% if task.priority == 'High' %}danger{% elif task.priority == 'Medium' %}warning{% else %}secondary{% endif %} ms-2">{{ task.priority }}</span>
+                                    <p class="mb-1 text-muted small">{{ task.facility }}</p>
+                                    <small class="text-muted">
+                                        Status: <span class="badge bg-info">{{ task.status }}</span>
+                                        {% if task.assigned_to %}
+                                        | Assigned to: {{ task.assigned_to }}
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                <form method="POST" action="{{ url_for('update_task_status') }}" class="d-flex gap-1">
+                                    <input type="hidden" name="task_id" value="{{ task.id }}">
+                                    <select name="status" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                                        <option value="Not Started" {% if task.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                        <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                        <option value="Completed" {% if task.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-check-circle fa-2x mb-2"></i>
+                            <p>No pending tasks</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Upcoming Events -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar text-info me-2"></i>
+                        Upcoming Events
+                    </h5>
+                    <a href="{{ url_for('calendar') }}" class="btn btn-sm btn-outline-primary">View Calendar</a>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_events %}
+                        {% for event in upcoming_events %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <strong>{{ event.title }}</strong>
+                            <p class="mb-1 text-muted small">{{ event.location or event.facility }}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ event.start_time.strftime('%m/%d/%Y %I:%M %p') }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-calendar-check fa-2x mb-2"></i>
+                            <p>No upcoming events</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Announcements -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bullhorn text-success me-2"></i>
+                        Recent Announcements
+                    </h5>
+                    <a href="{{ url_for('announcements') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_announcements %}
+                        {% for announcement in recent_announcements %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <strong>{{ announcement.title }}</strong>
+                            <span class="badge bg-secondary ms-2">{{ announcement.announcement_type }}</span>
+                            <p class="mb-1 text-muted small">{{ announcement.content[:100] }}{% if announcement.content|length > 100 %}...{% endif %}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ announcement.created_at.strftime('%m/%d %I:%M %p') }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-info-circle fa-2x mb-2"></i>
+                            <p>No recent announcements</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Reminders -->
+    {% if pending_reminders %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bell me-2"></i>
+                        Pending Reminders
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for reminder in pending_reminders %}
+                        <div class="col-md-6 mb-2">
+                            <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                <div>
+                                    <strong>{{ reminder.reminder_text }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        Due: {{ reminder.next_reminder.strftime('%m/%d %I:%M %p') }}
+                                        (Attempt #{{ reminder.reminder_count + 1 }})
+                                    </small>
+                                </div>
+                                <form method="POST" action="{{ url_for('acknowledge_reminder') }}">
+                                    <input type="hidden" name="reminder_id" value="{{ reminder.id }}">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check"></i> Done
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Update timestamp every minute
+setInterval(function() {
+    document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+}, 60000);
+
+// Dashboard action functions
+function createTaskFromMessage(messageId) {
+    // In a full implementation, this would open a modal or redirect to task creation with pre-filled data
+    window.location.href = '/tasks#create-from-message-' + messageId;
+}
+
+function createEventFromMessage(messageId) {
+    // In a full implementation, this would open a modal or redirect to calendar with pre-filled data
+    window.location.href = '/calendar#create-from-message-' + messageId;
+}
+
+function assignStaff(messageId) {
+    // In a full implementation, this would open a staff assignment modal
+    window.location.href = '/staff#assign-from-message-' + messageId;
+}
+
+function markProcessed(messageId) {
+    // In a full implementation, this would make an AJAX call to mark the message as processed
+    if (confirm('Mark this message as processed?')) {
+        // AJAX call would go here
+        location.reload();
+    }
+}
+</script>
+{% endblock %}
