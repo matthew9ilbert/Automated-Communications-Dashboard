@@ -67,7 +67,7 @@
                         </thead>
                         <tbody>
                             {% for event in events %}
-                            <tr class="{% if event.start_time < moment() %}table-secondary{% elif event.start_time < moment().add(days=1) %}table-warning{% endif %}">
+                            <tr class="{% if event.start_time < now %}table-secondary{% elif event.start_time < (now + timedelta(days=1)) %}table-warning{% endif %}">
                                 <td>
                                     <strong>{{ event.title }}</strong>
                                     {% if event.description %}
@@ -87,11 +87,11 @@
                                     <span class="badge bg-info">{{ event.facility or 'General' }}</span>
                                 </td>
                                 <td>
-                                    {% if event.start_time < moment() %}
+                                    {% if event.start_time < now %}
                                         <span class="badge bg-secondary">Past</span>
-                                    {% elif event.start_time < moment().add(hours=2) %}
+                                    {% elif event.start_time < (now + timedelta(hours=2)) %}
                                         <span class="badge bg-danger">Starting Soon</span>
-                                    {% elif event.start_time < moment().add(days=1) %}
+                                    {% elif event.start_time.date() == now.date() %}
                                         <span class="badge bg-warning">Today</span>
                                     {% else %}
                                         <span class="badge bg-success">Upcoming</span>

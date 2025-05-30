@@ -46,11 +46,12 @@ def register_routes(app):
                                  recent_announcements=recent_announcements,
                                  pending_reminders=pending_reminders,
                                  stats=stats,
-                                 facilities=Config.FACILITIES)
+                                 facilities=Config.FACILITIES,
+                                 now=datetime.now())
         except Exception as e:
             logger.error(f"Error loading dashboard: {e}")
             flash('Error loading dashboard data', 'error')
-            return render_template('dashboard.html', stats={}, facilities=Config.FACILITIES)
+            return render_template('dashboard.html', stats={}, facilities=Config.FACILITIES, now=datetime.now())
     
     @app.route('/messages')
     def messages():

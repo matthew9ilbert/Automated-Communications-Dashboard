@@ -24,6 +24,15 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     
+    # Add template context processors
+    @app.context_processor
+    def inject_datetime():
+        return dict(
+            now=datetime.now(),
+            timedelta=timedelta,
+            datetime=datetime
+        )
+    
     # Register routes
     from routes import register_routes
     register_routes(app)
