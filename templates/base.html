@@ -13,10 +13,13 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/seattle-background.css') }}">
     
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+    <!-- Seattle Cityscape Background -->
+    <div class="seattle-background"></div>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
