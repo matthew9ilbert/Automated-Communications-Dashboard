@@ -1,0 +1,546 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Management - EVS Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">
+            <i class="fas fa-users me-2"></i>
+            Staff Management
+        </h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+            <i class="fas fa-user-plus me-1"></i>
+            Add Staff Member
+        </button>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title text-info">Active Staff</h5>
+                            <h2 class="mb-0">{{ staff_members|length }}</h2>
+                        </div>
+                        <div class="text-info">
+                            <i class="fas fa-user-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title text-warning">Recent Assignments</h5>
+                            <h2 class="mb-0">{{ recent_assignments|length }}</h2>
+                        </div>
+                        <div class="text-warning">
+                            <i class="fas fa-clipboard-list fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title text-success">Coverage Today</h5>
+                            <h2 class="mb-0">{{ facilities|length }}</h2>
+                        </div>
+                        <div class="text-success">
+                            <i class="fas fa-building fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-3">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="card-title text-primary">Available</h5>
+                            <h2 class="mb-0">{{ (staff_members|length * 0.8)|int }}</h2>
+                        </div>
+                        <div class="text-primary">
+                            <i class="fas fa-user-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Staff Members List -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>
+                        Staff Members
+                    </h5>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-primary active" id="activeStaffBtn">
+                            Active
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="allStaffBtn">
+                            All
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if staff_members %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Contact</th>
+                                        <th>Facilities</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for staff in staff_members %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle me-2">
+                                                    {{ staff.name[0].upper() }}
+                                                </div>
+                                                <strong>{{ staff.name }}</strong>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if staff.email %}
+                                                <div><i class="fas fa-envelope me-1 text-muted"></i>{{ staff.email }}</div>
+                                            {% endif %}
+                                            {% if staff.phone %}
+                                                <div><i class="fas fa-phone me-1 text-muted"></i>{{ staff.phone }}</div>
+                                            {% endif %}
+                                            {% if not staff.email and not staff.phone %}
+                                                <span class="text-muted">No contact info</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if staff.facilities %}
+                                                {% set facility_list = staff.facilities.split(',') %}
+                                                {% for facility in facility_list[:2] %}
+                                                    <span class="badge bg-info me-1">{{ facility.strip() }}</span>
+                                                {% endfor %}
+                                                {% if facility_list|length > 2 %}
+                                                    <span class="text-muted">+{{ facility_list|length - 2 }} more</span>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="text-muted">No assignments</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if staff.active %}success{% else %}secondary{% endif %}">
+                                                {% if staff.active %}Active{% else %}Inactive{% endif %}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                        data-bs-toggle="modal" data-bs-target="#staffDetailModal{{ staff.id }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-success" 
+                                                        onclick="assignStaff({{ staff.id }}, '{{ staff.name }}')">
+                                                    <i class="fas fa-user-plus"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-warning" 
+                                                        data-bs-toggle="modal" data-bs-target="#editStaffModal{{ staff.id }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Staff Detail Modal -->
+                                    <div class="modal fade" id="staffDetailModal{{ staff.id }}" tabindex="-1">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">{{ staff.name }} - Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <h6>Contact Information</h6>
+                                                            <p><strong>Email:</strong> {{ staff.email or 'Not provided' }}</p>
+                                                            <p><strong>Phone:</strong> {{ staff.phone or 'Not provided' }}</p>
+                                                            <p><strong>Status:</strong> 
+                                                                <span class="badge bg-{% if staff.active %}success{% else %}secondary{% endif %}">
+                                                                    {% if staff.active %}Active{% else %}Inactive{% endif %}
+                                                                </span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <h6>Employment Details</h6>
+                                                            <p><strong>Member Since:</strong> {{ staff.created_at.strftime('%m/%d/%Y') }}</p>
+                                                            <p><strong>Total Assignments:</strong> {{ staff.assignments|length if staff.assignments else 0 }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <h6>Facility Assignments</h6>
+                                                        {% if staff.facilities %}
+                                                            {% set facility_list = staff.facilities.split(',') %}
+                                                            {% for facility in facility_list %}
+                                                                <span class="badge bg-info me-1 mb-1">{{ facility.strip() }}</span>
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            <p class="text-muted">No facility assignments</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-success" onclick="assignStaff({{ staff.id }}, '{{ staff.name }}')">
+                                                        <i class="fas fa-user-plus me-1"></i>Create Assignment
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-users fa-3x mb-3"></i>
+                            <h4>No staff members found</h4>
+                            <p>Add staff members to manage assignments and coverage.</p>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStaffModal">
+                                <i class="fas fa-user-plus me-1"></i>
+                                Add First Staff Member
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Assignments -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clipboard-list me-2"></i>
+                        Recent Assignments
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_assignments %}
+                        {% for assignment in recent_assignments %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <strong>{{ assignment.staff_member.name if assignment.staff_member else 'Unknown Staff' }}</strong>
+                                    <p class="mb-1 text-muted small">{{ assignment.facility }}</p>
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        {{ assignment.assignment_date.strftime('%m/%d %I:%M %p') }}
+                                        <span class="badge bg-info ms-1">{{ assignment.assignment_type or 'Regular' }}</span>
+                                    </small>
+                                </div>
+                            </div>
+                            {% if assignment.notes %}
+                                <small class="text-muted d-block mt-1">{{ assignment.notes[:50] }}{% if assignment.notes|length > 50 %}...{% endif %}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-3">
+                            <i class="fas fa-clipboard fa-2x mb-2"></i>
+                            <p>No recent assignments</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Assignment Card -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        Quick Assignment
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="quickAssignmentForm">
+                        <div class="mb-3">
+                            <label for="quickStaff" class="form-label">Staff Member</label>
+                            <select class="form-select" id="quickStaff" required>
+                                <option value="">Select staff...</option>
+                                {% for staff in staff_members %}
+                                    <option value="{{ staff.id }}">{{ staff.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quickFacility" class="form-label">Facility</label>
+                            <select class="form-select" id="quickFacility" required>
+                                <option value="">Select facility...</option>
+                                {% for facility in facilities %}
+                                    <option value="{{ facility }}">{{ facility }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quickType" class="form-label">Assignment Type</label>
+                            <select class="form-select" id="quickType">
+                                <option value="Regular">Regular</option>
+                                <option value="Coverage">Coverage</option>
+                                <option value="Emergency">Emergency</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-user-plus me-1"></i>
+                            Create Assignment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Staff Modal -->
+<div class="modal fade" id="addStaffModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Staff Member</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addStaffForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="staffName" class="form-label">Full Name *</label>
+                        <input type="text" class="form-control" id="staffName" name="name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="staffEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="staffEmail" name="email">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="staffPhone" class="form-label">Phone</label>
+                        <input type="tel" class="form-control" id="staffPhone" name="phone" placeholder="(555) 123-4567">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Facility Assignments</label>
+                        <div class="row">
+                            {% for facility in facilities %}
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="facility{{ loop.index }}" name="facilities" value="{{ facility }}">
+                                    <label class="form-check-label" for="facility{{ loop.index }}">
+                                        {{ facility }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="staffActive" name="active" checked>
+                        <label class="form-check-label" for="staffActive">
+                            Active staff member
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus me-1"></i>
+                        Add Staff Member
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Assignment Modal -->
+<div class="modal fade" id="assignmentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Staff Assignment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="assignmentForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="assignStaffName" class="form-label">Staff Member</label>
+                        <input type="text" class="form-control" id="assignStaffName" readonly>
+                        <input type="hidden" id="assignStaffId" name="staff_id">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="assignFacility" class="form-label">Facility *</label>
+                        <select class="form-select" id="assignFacility" name="facility" required>
+                            <option value="">Select facility...</option>
+                            {% for facility in facilities %}
+                                <option value="{{ facility }}">{{ facility }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="assignDate" class="form-label">Assignment Date *</label>
+                                <input type="date" class="form-control" id="assignDate" name="assignment_date" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="assignType" class="form-label">Type</label>
+                                <select class="form-select" id="assignType" name="assignment_type">
+                                    <option value="Regular">Regular</option>
+                                    <option value="Coverage">Coverage</option>
+                                    <option value="Emergency">Emergency</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="assignNotes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="assignNotes" name="notes" rows="3" placeholder="Additional notes about this assignment..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-user-check me-1"></i>
+                        Create Assignment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Set default assignment date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('assignDate').value = today;
+});
+
+// Staff view toggle
+document.getElementById('activeStaffBtn').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('allStaffBtn').classList.remove('active');
+    // Filter to show only active staff
+    filterStaffByStatus(true);
+});
+
+document.getElementById('allStaffBtn').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('activeStaffBtn').classList.remove('active');
+    // Show all staff
+    filterStaffByStatus(null);
+});
+
+function filterStaffByStatus(activeOnly) {
+    const rows = document.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        if (activeOnly === null) {
+            row.style.display = '';
+        } else {
+            const statusBadge = row.querySelector('.badge');
+            const isActive = statusBadge && statusBadge.textContent.trim() === 'Active';
+            row.style.display = (activeOnly === isActive) ? '' : 'none';
+        }
+    });
+}
+
+// Assignment function
+function assignStaff(staffId, staffName) {
+    document.getElementById('assignStaffId').value = staffId;
+    document.getElementById('assignStaffName').value = staffName;
+    new bootstrap.Modal(document.getElementById('assignmentModal')).show();
+}
+
+// Quick assignment form
+document.getElementById('quickAssignmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const staffId = document.getElementById('quickStaff').value;
+    const facility = document.getElementById('quickFacility').value;
+    const type = document.getElementById('quickType').value;
+    
+    if (!staffId || !facility) {
+        alert('Please select both staff member and facility');
+        return;
+    }
+    
+    // In a full implementation, this would submit to the backend
+    alert(`Assignment created: ${document.querySelector('#quickStaff option:checked').text} assigned to ${facility} (${type})`);
+    
+    // Reset form
+    this.reset();
+});
+
+// Add staff form
+document.getElementById('addStaffForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const selectedFacilities = Array.from(document.querySelectorAll('input[name="facilities"]:checked'))
+        .map(cb => cb.value);
+    
+    // In a full implementation, this would submit to the backend
+    alert(`Staff member "${formData.get('name')}" would be added with facilities: ${selectedFacilities.join(', ')}`);
+    
+    // Close modal and reset form
+    bootstrap.Modal.getInstance(document.getElementById('addStaffModal')).hide();
+    this.reset();
+});
+
+// Assignment form
+document.getElementById('assignmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const staffName = document.getElementById('assignStaffName').value;
+    const facility = formData.get('facility');
+    const date = formData.get('assignment_date');
+    const type = formData.get('assignment_type');
+    
+    // In a full implementation, this would submit to the backend
+    alert(`Assignment created: ${staffName} assigned to ${facility} on ${date} (${type})`);
+    
+    // Close modal and reset form
+    bootstrap.Modal.getInstance(document.getElementById('assignmentModal')).hide();
+    this.reset();
+});
+</script>
+{% endblock %}

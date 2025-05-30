@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks - EVS Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">
+            <i class="fas fa-tasks me-2"></i>
+            Task Management
+        </h1>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+            <i class="fas fa-plus me-1"></i>
+            Create New Task
+        </button>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-3">
+                    <label for="facility" class="form-label">Facility</label>
+                    <select name="facility" id="facility" class="form-select">
+                        <option value="">All Facilities</option>
+                        {% for facility in facilities %}
+                            <option value="{{ facility }}" {% if facility_filter == facility %}selected{% endif %}>{{ facility }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="Not Started" {% if status_filter == 'Not Started' %}selected{% endif %}>Not Started</option>
+                        <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Completed" {% if status_filter == 'Completed' %}selected{% endif %}>Completed</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="priority" class="form-label">Priority</label>
+                    <select name="priority" id="priority" class="form-select">
+                        <option value="">All Priorities</option>
+                        <option value="High" {% if priority_filter == 'High' %}selected{% endif %}>High</option>
+                        <option value="Medium" {% if priority_filter == 'Medium' %}selected{% endif %}>Medium</option>
+                        <option value="Low" {% if priority_filter == 'Low' %}selected{% endif %}>Low</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-grid gap-2 d-md-flex">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-filter me-1"></i>Filter
+                        </button>
+                        <a href="{{ url_for('tasks') }}" class="btn btn-outline-secondary">Clear</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tasks List -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-list me-2"></i>
+                Tasks ({{ tasks|length }} total)
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if tasks %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Facility</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Assigned To</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                            <tr>
+                                <td>
+                                    <strong>{{ task.title }}</strong>
+                                    {% if task.description %}
+                                        <br><small class="text-muted">{{ task.description[:100] }}{% if task.description|length > 100 %}...{% endif %}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ task.facility }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if task.priority == 'High' %}danger{% elif task.priority == 'Medium' %}warning{% else %}secondary{% endif %}">
+                                        {{ task.priority }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('update_task_status') }}" class="d-inline">
+                                        <input type="hidden" name="task_id" value="{{ task.id }}">
+                                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                                            <option value="Not Started" {% if task.status == 'Not Started' %}selected{% endif %}>Not Started</option>
+                                            <option value="In Progress" {% if task.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                                            <option value="Completed" {% if task.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                        </select>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('update_task_status') }}" class="d-inline">
+                                        <input type="hidden" name="task_id" value="{{ task.id }}">
+                                        <input type="hidden" name="status" value="{{ task.status }}">
+                                        <select name="assigned_to" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                                            <option value="">Unassigned</option>
+                                            <option value="John Smith" {% if task.assigned_to == 'John Smith' %}selected{% endif %}>John Smith</option>
+                                            <option value="Sarah Johnson" {% if task.assigned_to == 'Sarah Johnson' %}selected{% endif %}>Sarah Johnson</option>
+                                            <option value="Mike Davis" {% if task.assigned_to == 'Mike Davis' %}selected{% endif %}>Mike Davis</option>
+                                            <option value="Lisa Wilson" {% if task.assigned_to == 'Lisa Wilson' %}selected{% endif %}>Lisa Wilson</option>
+                                        </select>
+                                    </form>
+                                </td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ task.created_at.strftime('%m/%d/%Y') }}<br>
+                                        {{ task.created_at.strftime('%I:%M %p') }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#taskDetailModal{{ task.id }}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="duplicateTask({{ task.id }})">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Task Detail Modal -->
+                            <div class="modal fade" id="taskDetailModal{{ task.id }}" tabindex="-1">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{ task.title }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p><strong>Facility:</strong> {{ task.facility }}</p>
+                                                    <p><strong>Priority:</strong> 
+                                                        <span class="badge bg-{% if task.priority == 'High' %}danger{% elif task.priority == 'Medium' %}warning{% else %}secondary{% endif %}">
+                                                            {{ task.priority }}
+                                                        </span>
+                                                    </p>
+                                                    <p><strong>Status:</strong> 
+                                                        <span class="badge bg-{% if task.status == 'Completed' %}success{% elif task.status == 'In Progress' %}warning{% else %}secondary{% endif %}">
+                                                            {{ task.status }}
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p><strong>Assigned To:</strong> {{ task.assigned_to or 'Unassigned' }}</p>
+                                                    <p><strong>Created:</strong> {{ task.created_at.strftime('%m/%d/%Y %I:%M %p') }}</p>
+                                                    <p><strong>Updated:</strong> {{ task.updated_at.strftime('%m/%d/%Y %I:%M %p') }}</p>
+                                                </div>
+                                            </div>
+                                            {% if task.description %}
+                                            <div class="mt-3">
+                                                <strong>Description:</strong>
+                                                <p class="mt-2">{{ task.description }}</p>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-tasks fa-3x mb-3"></i>
+                    <h4>No tasks found</h4>
+                    <p>No tasks match your current filters or none have been created yet.</p>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                        <i class="fas fa-plus me-1"></i>
+                        Create First Task
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Create Task Modal -->
+<div class="modal fade" id="createTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('create_task') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Task Title *</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="facility" class="form-label">Facility *</label>
+                                <select class="form-select" id="facility" name="facility" required>
+                                    <option value="">Select Facility</option>
+                                    {% for facility in facilities %}
+                                        <option value="{{ facility }}">{{ facility }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="priority" class="form-label">Priority</label>
+                                <select class="form-select" id="priority" name="priority">
+                                    <option value="Medium" selected>Medium</option>
+                                    <option value="High">High</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="assigned_to" class="form-label">Assign To</label>
+                        <select class="form-select" id="assigned_to" name="assigned_to">
+                            <option value="">Leave Unassigned</option>
+                            <option value="John Smith">John Smith</option>
+                            <option value="Sarah Johnson">Sarah Johnson</option>
+                            <option value="Mike Davis">Mike Davis</option>
+                            <option value="Lisa Wilson">Lisa Wilson</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>
+                        Create Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function duplicateTask(taskId) {
+    // In a full implementation, this would populate the create task modal with existing task data
+    $('#createTaskModal').modal('show');
+}
+</script>
+{% endblock %}
