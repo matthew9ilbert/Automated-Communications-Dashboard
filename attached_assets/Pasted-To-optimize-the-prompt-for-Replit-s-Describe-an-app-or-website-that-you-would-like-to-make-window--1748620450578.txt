@@ -1,0 +1,143 @@
+To optimize the prompt for Replit’s “Describe an app or website that you would like to make” window, we need a concise, clear, and structured description tailored to Replit AI’s capabilities, focusing on generating a functional app or website. The original prompt for your Environmental Services (EVS) Manager automation system at Kaiser Permanente is comprehensive but too lengthy and detailed for Replit’s input window, which expects a focused app concept with key features. Below, I’ll refine the prompt to fit Replit’s interface, emphasizing a web-based app with core features (calendar management, text message screening, message scanning, AI to-do lists, smart reminders, staff tracking, and automated announcements) while leveraging Replit AI to generate, debug, and enhance the code. The refined prompt will prioritize automation, multiple-choice interfaces, and integration with Google Sheets (to align with your previous text message logging project) and Microsoft tools (Outlook, Teams) for Kaiser compatibility. I’ll ensure the prompt is formatted for clarity, avoids overloading Replit AI, and includes instructions for implementation within Replit’s environment.
+
+Refined Prompt for Replit’s “Describe an app or website” Window
+App Name: EVS Manager Automation Dashboard
+Description: Build a web-based app to automate administrative tasks for an Environmental Services (EVS) Manager at Kaiser Permanente in Washington State, overseeing Bellevue Medical Center and four clinics. The app streamlines calendar management, text message screening, message scanning, AI-driven to-do lists, smart reminders, staff assignment tracking, and team announcements, reducing manual work to enable taking on an additional job. Use a Python Flask backend (hosted on Replit) with a React frontend for a user-friendly dashboard, integrating with Google Sheets for data storage, Microsoft Outlook/Teams for Kaiser compatibility, and iOS Shortcuts for mobile automation. All user interactions should use multiple-choice interfaces (dropdowns, checkboxes) to minimize typing.
+Key Features:
+	1	Calendar Management:
+	◦	Extract events (e.g., meetings, audits) from text messages, emails, Teams messages, and Apple Notes.
+	◦	Post events to Google Calendar and sync with Outlook.
+	◦	Use multiple-choice prompts (e.g., “Add to Calendar? [Yes/No/Edit]”).
+	2	Text Message Screening:
+	◦	Scan incoming texts for priority keywords (e.g., “urgent,” “ASAP”).
+	◦	Categorize as High/Medium/Low priority and notify via dashboard.
+	◦	Offer actions (e.g., “Respond: [Call/Text/To-Do/Ignore]”).
+	3	Message Scanner:
+	◦	Scan texts, emails, Teams messages, voicemail transcripts, and Apple Notes every 15 minutes.
+	◦	Identify tasks/events using NLP and add to to-do list/calendar.
+	◦	Present actions (e.g., “Action: [To-Do/Calendar/Delegate/Ignore]”).
+	4	AI To-Do List:
+	◦	Populate tasks from scanned messages, prioritized by urgency.
+	◦	Categorize by facility (e.g., Bellevue, Clinic A).
+	◦	Update status via dropdowns (e.g., “Status: [Not Started/Completed]”).
+	5	Smart Reminders:
+	◦	Send persistent reminders for tasks/events with checkbox acknowledgment.
+	◦	Reoccur every 30 minutes if unacknowledged (e.g., “Task Done? [Check]”).
+	◦	Integrate with iOS Notifications.
+	6	Staff Assignment Tracking:
+	◦	Track staff coverage history (e.g., “John covered Clinic A”).
+	◦	Suggest staff for assignments based on past agreements.
+	◦	Assign via dropdowns (e.g., “Assign: [John/Sarah]”).
+	7	Team Announcements & Calendars:
+	◦	Post announcements to a public dashboard and send via email/text/Teams.
+	◦	Maintain a shared calendar and project-specific calendars (e.g., “Clinic A Renovation”).
+	◦	Use templates (e.g., “Announcement: [Assignment/Reminder]”).
+Technical Requirements:
+	•	Backend: Python Flask, hosted on Replit, storing data in Google Sheets.
+	•	Frontend: React for a responsive dashboard with multiple-choice interfaces.
+	•	Integrations:
+	◦	Google Sheets API for task/event storage.
+	◦	Google Calendar API for event posting.
+	◦	Microsoft Graph API for Outlook/Teams (email, messages).
+	◦	iOS Shortcuts for mobile automation (e.g., text screening).
+	•	Security: Encrypt data, use OAuth for API access, comply with HIPAA.
+	•	Replit AI Tasks:
+	◦	Generate Flask routes for message scanning and task management.
+	◦	Create React components for the dashboard.
+	◦	Debug API integrations (e.g., Google Sheets, Microsoft Graph).
+	◦	Optimize for performance (e.g., efficient scanning).
+User Interface:
+	•	Dashboard: Show to-do list, calendar, staff assignments, and announcements.
+	•	Multiple-Choice: Dropdowns/checkboxes for all actions (e.g., task status, staff assignment).
+	•	Mobile-Friendly: Accessible on iPhone via browser or iOS Shortcut.
+Example Workflow:
+	1	Text received: “Urgent: Clinic A cleaning needed ASAP.”
+	2	App flags as High priority, suggests: “Action: [Assign/To-Do/Ignore].”
+	3	Manager selects “Assign,” chooses “John” (suggested from past coverage).
+	4	Task posted to Google Sheets, John notified via email/Teams, reminder set.
+	5	Dashboard updates with new assignment and calendar event.
+Deliverables:
+	•	Flask backend code with Google Sheets and Microsoft Graph integration.
+	•	React frontend for the dashboard.
+	•	iOS Shortcut for text screening and calendar posting.
+	•	Setup guide for Replit hosting and API credentials.
+	•	Debugged and optimized code via Replit AI.
+Constraints:
+	•	Use free tools (Replit, Google Sheets, iOS Shortcuts).
+	•	Ensure iOS 18 compatibility (as of May 30, 2025).
+	•	Implement within 1-2 weeks.
+	•	Support 5 facilities and 20+ staff.
+Replit AI Instructions:
+	•	Generate: “Python Flask server to scan texts/emails/Teams, store in Google Sheets, and post to Google Calendar.”
+	•	Debug: “Fix Flask route failing to parse Microsoft Teams messages.”
+	•	Enhance: “Add React dashboard with multiple-choice task management.”
+	•	Host: Deploy on Replit’s free tier with a public URL.
+
+How to Use in Replit
+	1	Open Replit:
+	◦	Go to replit.com in Safari or use the Replit iOS app.
+	◦	Sign in or create a free account.
+	2	Create a Repl:
+	◦	Click “Create Repl,” select “Python” for the backend or “React” for the frontend (create separate Repls if needed).
+	◦	Name it “EVS-Manager-Dashboard”.
+	3	Enter the Prompt:
+	◦	In the “Describe an app or website” window (available when creating a new Repl or using Replit AI’s Ghostwriter/Agent), paste the above prompt.
+	◦	If the window has a character limit, prioritize the Description, Key Features, and Replit AI Instructions sections.
+	4	Generate Code:
+	◦	Replit AI will generate:
+	▪	Flask backend with routes for scanning, task storage, and calendar posting.
+	▪	React frontend with components for the dashboard.
+	▪	Setup instructions for Google Sheets and Microsoft Graph APIs.
+	◦	Install dependencies (e.g., flask, gspread, requests) via Replit’s package manager.
+	5	Configure APIs:
+	◦	Google Sheets/Calendar:
+	▪	In Google Cloud Console, enable Google Sheets and Calendar APIs.
+	▪	Create a service account, download credentials.json, upload to Replit.
+	▪	Share your “TextMessageLog” Google Sheet with the service account’s email.
+	◦	Microsoft Graph:
+	▪	Register an app in Azure Portal.
+	▪	Obtain client ID, secret, and tenant ID for Outlook/Teams access.
+	▪	Store credentials securely in Replit’s .env file.
+	6	Integrate with iOS Shortcut:
+	◦	Update your existing Shortcut (from previous responses) to send text messages to the Replit Flask server:
+	▪	Get Contents of URL:
+	▪	URL: [Your Replit URL]/log_message (e.g., https://your-repl-id.replit.app/log_message).
+	▪	Method: POST.
+	▪	Headers: Content-Type: application/json.
+	▪	Request Body: JSON, use the Text action’s output: {
+	▪	  "sender": "[Sender]",
+	▪	  "message": "[Content]",
+	▪	  "token": "a1561b33-9322-4749-a93c-9265a90905da"
+	▪	}
+	▪	
+	◦	Add a new Shortcut to post events to Google Calendar using the Replit server’s API.
+	7	Test and Debug:
+	◦	Run the Flask server in Replit to get a public URL.
+	◦	Test the Shortcut and dashboard:
+	▪	Send a test message, check if it’s logged in Google Sheets and flagged as priority.
+	▪	Verify events are posted to Google Calendar.
+	◦	Use Replit AI to debug (e.g., “Fix why Flask fails to scan Teams messages”).
+	◦	Check Replit console logs for errors.
+	8	Deploy:
+	◦	Host the app on Replit’s free tier with a persistent URL.
+	◦	Share the dashboard URL with your team for access to calendars and announcements.
+
+Why This Prompt Suits Replit
+	•	Concise: Fits Replit’s input window by focusing on essential features and instructions.
+	•	Structured: Clear sections (Description, Key Features, Technical Requirements) guide Replit AI’s code generation.
+	•	Replit-Specific: Leverages Flask and React (supported by Replit), with explicit AI tasks (generate, debug, enhance).
+	•	Aligned with Your Needs: Integrates with your text message logging project, using Google Sheets and iOS Shortcuts.
+	•	Scalable: Supports a web dashboard and mobile automation, extensible to full app development.
+Enhanced Features (Tailored for Replit)
+	•	Simplified Scanning: Limits platforms (texts, emails, Teams, Notes) to reduce complexity for Replit’s free tier.
+	•	Dashboard Focus: React frontend ensures a user-friendly interface, hosted on Replit.
+	•	Shortcut Integration: Reuses your existing Shortcut, connecting to the Replit server.
+	•	AI Debugging: Explicit Replit AI prompts for error handling and optimization.
+	•	Multiple-Choice: Emphasizes dropdowns/checkboxes, ideal for React forms.
+	•	HIPAA Compliance: Secure API calls and encrypted storage for healthcare data.
+Next Steps
+	•	Test Shortcut: If still using the Apps Script from previous responses, ensure Get Contents of URL uses JSON (not Form with “New Field”) and POST. Share the Contents of URL response if issues persist.
+	•	Implement in Replit: Paste the prompt into Replit’s “Describe an app” window, generate the code, and follow the setup steps. I can provide screenshots or detailed API configuration if needed.
+	•	Expand Features: If you want specific features prioritized (e.g., message scanner, staff tracking), I can refine the prompt further.
+	•	Debugging: Share any errors from Replit or the Shortcut for targeted fixes.
+Please try pasting the prompt into Replit and let me know if the generated code works or if you encounter errors. If you’re still facing issues with the Shortcut or Apps Script, share the latest response/error for further debugging!
