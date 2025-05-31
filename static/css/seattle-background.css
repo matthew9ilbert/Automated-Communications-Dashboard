@@ -208,8 +208,8 @@ p, .card-text, .list-group-item {
     backdrop-filter: blur(8px);
 }
 
-/* Additional status colors with lighter backgrounds */
-.status-completed {
+/* Task window status styling with consistent backgrounds */
+.status-completed, .task-completed, .completed-task {
     color: #4682b4 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
@@ -219,7 +219,7 @@ p, .card-text, .list-group-item {
     backdrop-filter: blur(8px);
 }
 
-.status-in-progress {
+.status-in-progress, .task-in-progress, .in-progress-task {
     color: #ffd700 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
@@ -229,7 +229,7 @@ p, .card-text, .list-group-item {
     backdrop-filter: blur(8px);
 }
 
-.status-canceled {
+.status-canceled, .task-canceled, .canceled-task {
     color: #ff69b4 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
@@ -237,6 +237,37 @@ p, .card-text, .list-group-item {
     padding: 4px 8px;
     border-radius: 4px;
     backdrop-filter: blur(8px);
+}
+
+/* Task window numbers with matching text colors */
+.completed-task .task-number, .completed-task .count-display {
+    color: #4682b4 !important;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.in-progress-task .task-number, .in-progress-task .count-display {
+    color: #ffd700 !important;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.canceled-task .task-number, .canceled-task .count-display {
+    color: #ff69b4 !important;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.pending-task .task-number, .pending-task .count-display {
+    color: #ffb74d !important;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.high-priority-task .task-number, .high-priority-task .count-display {
+    color: #ff3838 !important;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 .notes-comments {
