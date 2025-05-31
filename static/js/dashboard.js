@@ -45,6 +45,8 @@ function simulateTimeOfDay(testHour) {
         backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image (6-10 AM)
     } else if (timeDecimal >= 10 && timeDecimal < 14) {
         backgroundImage = "url('/static/IMG_6144.jpeg')"; // Midday image (10 AM-2 PM)
+    } else if (timeDecimal >= 14 && timeDecimal < 18) {
+        backgroundImage = "url('/static/IMG_6143_afternoon.jpeg')"; // Afternoon image (2-6 PM)
     }
     root.style.setProperty('--bg-image', backgroundImage);
     
@@ -118,6 +120,8 @@ function updateDynamicBackground() {
         backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image (6-10 AM)
     } else if (timeDecimal >= 10 && timeDecimal < 14) {
         backgroundImage = "url('/static/IMG_6144.jpeg')"; // Midday image (10 AM-2 PM)
+    } else if (timeDecimal >= 14 && timeDecimal < 18) {
+        backgroundImage = "url('/static/IMG_6143_afternoon.jpeg')"; // Afternoon image (2-6 PM)
     }
     root.style.setProperty('--bg-image', backgroundImage);
     
@@ -188,6 +192,8 @@ function initializeDashboard() {
         simulateTimeOfDay(12); // 12 PM midday
     } else if (window.location.search.includes('test=noon')) {
         simulateTimeOfDay(12); // Noon
+    } else if (window.location.search.includes('test=afternoon')) {
+        simulateTimeOfDay(15); // 3 PM afternoon
     } else if (window.location.search.includes('test=evening')) {
         simulateTimeOfDay(18); // 6 PM evening
     } else if (window.location.search.includes('test=night')) {
