@@ -94,6 +94,11 @@ a .card:hover h2 {
     border: 1px solid rgba(13, 202, 240, 0.2);
 }
 
+.card.border-success {
+    background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(25, 135, 84, 0.05));
+    border: 1px solid rgba(25, 135, 84, 0.2);
+}
+
 /* Priority indicators */
 .priority-high {
     border-left: 4px solid var(--bs-danger);

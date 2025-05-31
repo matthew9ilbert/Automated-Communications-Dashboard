@@ -20,14 +20,14 @@
     <div class="row mb-4">
         <div class="col-xl-3 col-md-6 mb-3">
             <a href="{{ url_for('tasks') }}" class="text-decoration-none">
-                <div class="card border-primary">
+                <div class="card border-warning">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h5 class="card-title text-primary">Total Tasks</h5>
-                                <h2 class="mb-0">{{ stats.total_tasks or 0 }}</h2>
+                                <h5 class="card-title text-warning">Total Tasks</h5>
+                                <h2 class="mb-0 text-warning">{{ stats.total_tasks or 0 }}</h2>
                             </div>
-                            <div class="text-primary">
+                            <div class="text-warning">
                                 <i class="fas fa-tasks fa-2x"></i>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h5 class="card-title text-warning">Pending Tasks</h5>
-                                <h2 class="mb-0">{{ stats.pending_tasks or 0 }}</h2>
+                                <h2 class="mb-0 text-warning">{{ stats.pending_tasks or 0 }}</h2>
                             </div>
                             <div class="text-warning">
                                 <i class="fas fa-clock fa-2x"></i>
@@ -61,7 +61,7 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <h5 class="card-title text-danger">High Priority</h5>
-                                <h2 class="mb-0">{{ stats.high_priority_messages or 0 }}</h2>
+                                <h2 class="mb-0 text-danger">{{ stats.high_priority_messages or 0 }}</h2>
                             </div>
                             <div class="text-danger">
                                 <i class="fas fa-exclamation-triangle fa-2x"></i>
@@ -74,14 +74,14 @@
         
         <div class="col-xl-3 col-md-6 mb-3">
             <a href="{{ url_for('calendar') }}" class="text-decoration-none">
-                <div class="card border-info">
+                <div class="card border-success">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h5 class="card-title text-info">Upcoming Events</h5>
-                                <h2 class="mb-0">{{ stats.upcoming_events or 0 }}</h2>
+                                <h5 class="card-title text-success">Upcoming Events</h5>
+                                <h2 class="mb-0 text-success">{{ stats.upcoming_events or 0 }}</h2>
                             </div>
-                            <div class="text-info">
+                            <div class="text-success">
                                 <i class="fas fa-calendar fa-2x"></i>
                             </div>
                         </div>
