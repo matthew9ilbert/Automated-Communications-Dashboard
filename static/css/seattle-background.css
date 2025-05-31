@@ -89,7 +89,7 @@ body {
 
 /* Allow specific color classes to override default white text */
 .card-body .text-warning {
-    color: #ffc107 !important;
+    color: #ffeb3b !important;
 }
 
 .card-body .text-danger {
@@ -113,11 +113,11 @@ body {
 }
 
 .card-body .text-pink {
-    color: #e91e63 !important;
+    color: #ff69b4 !important;
 }
 
 .card-header .text-pink {
-    color: #e91e63 !important;
+    color: #ff69b4 !important;
 }
 
 .navbar {
