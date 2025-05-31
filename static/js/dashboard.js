@@ -39,10 +39,12 @@ function simulateTimeOfDay(testHour) {
     
     const root = document.documentElement;
     
-    // Check for morning time window (6:00 AM - 10:00 AM)
+    // Check for time-based background images
     let backgroundImage = "url('/static/IMG_6138.jpeg')"; // Default dusk image
-    if (timeDecimal >= 6 && timeDecimal <= 10) {
-        backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image
+    if (timeDecimal >= 6 && timeDecimal < 10) {
+        backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image (6-10 AM)
+    } else if (timeDecimal >= 10 && timeDecimal < 14) {
+        backgroundImage = "url('/static/IMG_6144.jpeg')"; // Midday image (10 AM-2 PM)
     }
     root.style.setProperty('--bg-image', backgroundImage);
     
@@ -110,10 +112,12 @@ function updateDynamicBackground() {
     
     const root = document.documentElement;
     
-    // Check for morning time window (6:00 AM - 10:00 AM)
+    // Check for time-based background images
     let backgroundImage = "url('/static/IMG_6138.jpeg')"; // Default dusk image
-    if (timeDecimal >= 6 && timeDecimal <= 10) {
-        backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image
+    if (timeDecimal >= 6 && timeDecimal < 10) {
+        backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image (6-10 AM)
+    } else if (timeDecimal >= 10 && timeDecimal < 14) {
+        backgroundImage = "url('/static/IMG_6144.jpeg')"; // Midday image (10 AM-2 PM)
     }
     root.style.setProperty('--bg-image', backgroundImage);
     
@@ -180,6 +184,8 @@ function initializeDashboard() {
     // Add test controls for time simulation (temporary)
     if (window.location.search.includes('test=morning')) {
         simulateTimeOfDay(7); // 7 AM morning
+    } else if (window.location.search.includes('test=midday')) {
+        simulateTimeOfDay(12); // 12 PM midday
     } else if (window.location.search.includes('test=noon')) {
         simulateTimeOfDay(12); // Noon
     } else if (window.location.search.includes('test=evening')) {
