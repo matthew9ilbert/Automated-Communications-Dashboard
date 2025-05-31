@@ -46,24 +46,27 @@ function simulateTimeOfDay(testHour) {
         const sunY = 10 + Math.sin(sunProgress * Math.PI) * -5; // Arc motion
         
         // Brightness varies throughout day
-        let brightness = 1.4;
+        let brightness = 1.8;
         let sunOpacity = 1;
+        let bgOpacity = 0.9;
         
         if (timeDecimal < sunrise + 2) {
             // Dawn/morning
-            brightness = 0.9 + (timeDecimal - sunrise) * 0.25;
-            sunOpacity = 0.6 + (timeDecimal - sunrise) * 0.2;
+            brightness = 1.0 + (timeDecimal - sunrise) * 0.4;
+            sunOpacity = 0.7 + (timeDecimal - sunrise) * 0.15;
+            bgOpacity = 0.8;
         } else if (timeDecimal > sunset - 2) {
             // Evening/dusk
-            brightness = 1.4 - (timeDecimal - (sunset - 2)) * 0.5;
-            sunOpacity = 1 - (timeDecimal - (sunset - 2)) * 0.4;
+            brightness = 1.8 - (timeDecimal - (sunset - 2)) * 0.6;
+            sunOpacity = 1 - (timeDecimal - (sunset - 2)) * 0.5;
+            bgOpacity = 0.7;
         }
         
         root.style.setProperty('--sun-x', sunX + '%');
         root.style.setProperty('--sun-y', sunY + '%');
         root.style.setProperty('--sun-opacity', sunOpacity);
         root.style.setProperty('--bg-brightness', brightness);
-        root.style.setProperty('--bg-opacity', '0.8');
+        root.style.setProperty('--bg-opacity', bgOpacity);
         root.style.setProperty('--bg-hue', '0deg');
         
         console.log(`Daytime mode: ${timeDecimal.toFixed(1)}h, Sun at ${sunX.toFixed(1)}%, ${sunY.toFixed(1)}%, Brightness: ${brightness.toFixed(1)}`);
