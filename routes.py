@@ -94,7 +94,12 @@ def register_routes(app):
             if facility_filter:
                 query = query.filter_by(facility=facility_filter)
             if status_filter:
-                query = query.filter_by(status=status_filter)
+                # Handle comma-separated status values
+                if ',' in status_filter:
+                    status_list = [s.strip() for s in status_filter.split(',')]
+                    query = query.filter(Task.status.in_(status_list))
+                else:
+                    query = query.filter_by(status=status_filter)
             if priority_filter:
                 query = query.filter_by(priority=priority_filter)
             
