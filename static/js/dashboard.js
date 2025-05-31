@@ -20,6 +20,65 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
+ * Test function to simulate different times of day
+ */
+function simulateTimeOfDay(testHour) {
+    const now = new Date();
+    const timeDecimal = testHour !== undefined ? testHour : now.getHours() + now.getMinutes() / 60;
+    
+    // Seattle coordinates for sun calculations (approximate)
+    const latitude = 47.6062;
+    const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+    
+    // Calculate sunrise and sunset times (simplified)
+    const solarNoon = 12;
+    const declination = 23.45 * Math.sin((360 * (284 + dayOfYear) / 365) * Math.PI / 180);
+    const hourAngle = Math.acos(-Math.tan(latitude * Math.PI / 180) * Math.tan(declination * Math.PI / 180));
+    const sunrise = solarNoon - (hourAngle * 12 / Math.PI);
+    const sunset = solarNoon + (hourAngle * 12 / Math.PI);
+    
+    const root = document.documentElement;
+    
+    if (timeDecimal >= sunrise && timeDecimal <= sunset) {
+        // Daytime - show sun and bright background
+        const sunProgress = (timeDecimal - sunrise) / (sunset - sunrise);
+        const sunX = 20 + (sunProgress * 60); // Sun moves from 20% to 80% across sky
+        const sunY = 10 + Math.sin(sunProgress * Math.PI) * -5; // Arc motion
+        
+        // Brightness varies throughout day
+        let brightness = 1.4;
+        let sunOpacity = 1;
+        
+        if (timeDecimal < sunrise + 2) {
+            // Dawn/morning
+            brightness = 0.9 + (timeDecimal - sunrise) * 0.25;
+            sunOpacity = 0.6 + (timeDecimal - sunrise) * 0.2;
+        } else if (timeDecimal > sunset - 2) {
+            // Evening/dusk
+            brightness = 1.4 - (timeDecimal - (sunset - 2)) * 0.5;
+            sunOpacity = 1 - (timeDecimal - (sunset - 2)) * 0.4;
+        }
+        
+        root.style.setProperty('--sun-x', sunX + '%');
+        root.style.setProperty('--sun-y', sunY + '%');
+        root.style.setProperty('--sun-opacity', sunOpacity);
+        root.style.setProperty('--bg-brightness', brightness);
+        root.style.setProperty('--bg-opacity', '0.8');
+        root.style.setProperty('--bg-hue', '0deg');
+        
+        console.log(`Daytime mode: ${timeDecimal.toFixed(1)}h, Sun at ${sunX.toFixed(1)}%, ${sunY.toFixed(1)}%, Brightness: ${brightness.toFixed(1)}`);
+    } else {
+        // Nighttime - hide sun, darker background
+        root.style.setProperty('--sun-opacity', '0');
+        root.style.setProperty('--bg-brightness', '0.6');
+        root.style.setProperty('--bg-opacity', '0.6');
+        root.style.setProperty('--bg-hue', '15deg'); // Slight warm tint for night
+        
+        console.log(`Night mode: ${timeDecimal.toFixed(1)}h, No sun, Dark background`);
+    }
+}
+
+/**
  * Dynamic background controller based on time of day
  */
 function updateDynamicBackground() {
@@ -100,6 +159,17 @@ function initializeDashboard() {
     
     // Update background every 5 minutes
     setInterval(updateDynamicBackground, 300000);
+    
+    // Add test controls for time simulation (temporary)
+    if (window.location.search.includes('test=morning')) {
+        simulateTimeOfDay(7); // 7 AM morning
+    } else if (window.location.search.includes('test=noon')) {
+        simulateTimeOfDay(12); // Noon
+    } else if (window.location.search.includes('test=evening')) {
+        simulateTimeOfDay(18); // 6 PM evening
+    } else if (window.location.search.includes('test=night')) {
+        simulateTimeOfDay(23); // 11 PM night
+    }
     
     console.log('Dashboard initialized successfully');
 }
