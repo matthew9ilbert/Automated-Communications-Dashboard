@@ -61,37 +61,209 @@ body {
     z-index: 2;
 }
 
-/* Enhanced translucent card backgrounds */
+/* Enhanced translucent card backgrounds with better contrast */
 .card {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.08) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(25px) saturate(180%);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    color: #ffffff !important;
+}
+
+.card-header {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+.card-body {
+    color: #ffffff !important;
 }
 
 .navbar {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(25px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.1) 100%) !important;
+    backdrop-filter: blur(30px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-/* Enhance text visibility */
+.navbar-brand, .navbar-nav .nav-link {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-nav .nav-link:hover {
+    color: #e3f2fd !important;
+}
+
+/* Enhanced text visibility and readability */
 .text-muted {
-    color: rgba(var(--bs-light-rgb), 0.7) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Table enhancements */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+p, .card-text, .list-group-item {
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Table enhancements with better contrast */
 .table {
-    background-color: rgba(var(--bs-dark-rgb), 0.7);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(15px);
+    border-radius: 8px;
+    overflow: hidden;
+    color: #ffffff !important;
 }
 
-.table-dark {
-    --bs-table-bg: rgba(var(--bs-dark-rgb), 0.8);
+.table th {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.table td {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.table-hover tbody tr:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Button enhancements */
+.btn {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, 
+        rgba(33, 150, 243, 0.8) 0%, 
+        rgba(21, 101, 192, 0.8) 100%) !important;
+    border-color: rgba(33, 150, 243, 0.6) !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, 
+        rgba(76, 175, 80, 0.8) 0%, 
+        rgba(56, 142, 60, 0.8) 100%) !important;
+    border-color: rgba(76, 175, 80, 0.6) !important;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, 
+        rgba(255, 193, 7, 0.8) 0%, 
+        rgba(255, 152, 0, 0.8) 100%) !important;
+    border-color: rgba(255, 193, 7, 0.6) !important;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, 
+        rgba(244, 67, 54, 0.8) 0%, 
+        rgba(198, 40, 40, 0.8) 100%) !important;
+    border-color: rgba(244, 67, 54, 0.6) !important;
+}
+
+/* Form controls */
+.form-control {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    backdrop-filter: blur(10px);
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(33, 150, 243, 0.6) !important;
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25) !important;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* List group items */
+.list-group-item {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px);
+}
+
+.list-group-item:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Badge enhancements */
+.badge {
+    backdrop-filter: blur(10px);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Modal enhancements */
 .modal-content {
-    background-color: rgba(var(--bs-dark-rgb), 0.95);
-    backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.15) 0%, 
+        rgba(255, 255, 255, 0.1) 100%) !important;
+    backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    color: #ffffff !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.modal-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Alert enhancements */
+.alert {
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff !important;
+}
+
+.alert-primary {
+    background: rgba(33, 150, 243, 0.15) !important;
+    border-color: rgba(33, 150, 243, 0.3) !important;
+}
+
+.alert-success {
+    background: rgba(76, 175, 80, 0.15) !important;
+    border-color: rgba(76, 175, 80, 0.3) !important;
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.15) !important;
+    border-color: rgba(255, 193, 7, 0.3) !important;
+}
+
+.alert-danger {
+    background: rgba(244, 67, 54, 0.15) !important;
+    border-color: rgba(244, 67, 54, 0.3) !important;
 }
