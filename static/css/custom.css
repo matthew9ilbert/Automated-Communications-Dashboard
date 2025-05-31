@@ -28,10 +28,18 @@
 .card {
     transition: all 0.3s ease-in-out;
     border: none;
-    border-radius: 16px;
+    border-radius: 20px;
     background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
     backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-radius: 20px 20px 0 0 !important;
+}
+
+.card-body {
+    border-radius: 0 0 20px 20px !important;
 }
 
 .card:hover {
