@@ -182,9 +182,11 @@ function handleWindowResize() {
     adjustTableLayout();
     
     // Recalculate chart sizes if present
-    if (window.Chart) {
-        Chart.instances.forEach(chart => {
-            chart.resize();
+    if (window.Chart && Chart.instances && Chart.instances.length > 0) {
+        Object.values(Chart.instances).forEach(chart => {
+            if (chart && typeof chart.resize === 'function') {
+                chart.resize();
+            }
         });
     }
 }
@@ -316,12 +318,10 @@ function refreshRecentItems() {
  */
 function checkForNotifications() {
     // In a full implementation, this would check for new alerts
-    // Simulate checking for high-priority items
-    const highPriorityCount = document.querySelectorAll('.badge.bg-danger').length;
+    // Only update badge if there are actual unread notifications
+    const unreadMessages = document.querySelectorAll('.message-item.unread, .task-item.urgent').length;
     
-    if (highPriorityCount > 0) {
-        updateNotificationBadge(highPriorityCount);
-    }
+    updateNotificationBadge(unreadMessages);
 }
 
 /**
