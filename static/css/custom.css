@@ -44,11 +44,14 @@
 
 /* Compact View All/Calendar buttons */
 .card-header .btn {
-    padding: 0.25rem 0.75rem;
-    font-size: 0.875rem;
-    border-radius: 15px;
-    min-width: 80px;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 12px;
+    min-width: 65px;
+    max-width: 80px;
     margin-top: 0.25rem;
+    text-align: center;
+    display: inline-block;
 }
 
 .card:hover {
