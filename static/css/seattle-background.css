@@ -109,7 +109,15 @@ body {
 }
 
 .card-body .text-orange {
-    color: #ff6300 !important;
+    color: #ff9500 !important;
+}
+
+.card-body .text-pink {
+    color: #e91e63 !important;
+}
+
+.card-header .text-pink {
+    color: #e91e63 !important;
 }
 
 .navbar {

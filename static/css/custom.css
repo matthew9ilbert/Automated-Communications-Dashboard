@@ -100,8 +100,8 @@ a .card:hover h2 {
 }
 
 .card.border-orange {
-    background: linear-gradient(135deg, rgba(255, 99, 0, 0.1), rgba(255, 99, 0, 0.05));
-    border: 1px solid rgba(255, 99, 0, 0.2);
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.1), rgba(255, 149, 0, 0.05));
+    border: 1px solid rgba(255, 149, 0, 0.2);
 }
 
 /* Priority indicators */
