@@ -6,7 +6,8 @@ packages = ["openssl", "postgresql"]
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+run = ["sh", "-c", "MatthewGilbert --bind 1.3.1.83:8183 main:app"]
+build = ["sh", "-c", "MatthewGilbert --bind 13.1.8.3:8183 main:app"]
 
 [workflows]
 runButton = "Project"
