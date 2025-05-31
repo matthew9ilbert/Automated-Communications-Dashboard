@@ -165,28 +165,77 @@ p, .card-text, .list-group-item {
     border-radius: 4px;
 }
 
-/* High contrast text for critical elements */
-.text-warning {
-    color: #ff8c00 !important;
+/* Priority and status color schemes */
+.text-warning, .priority-high {
+    color: #ff4757 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-}
-
-.text-info {
-    color: #b3d9ff !important;
-    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.9);
-    font-weight: 600;
     background: rgba(0, 0, 0, 0.5);
-    padding: 2px 6px;
+    padding: 4px 8px;
     border-radius: 4px;
 }
 
-.text-primary {
-    color: #cce7ff !important;
+.priority-pending, .status-pending {
+    color: #ffa726 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.text-info, .upcoming-event {
+    color: #87ceeb !important;
     text-shadow: 0 3px 8px rgba(0, 0, 0, 0.9);
     font-weight: 600;
     background: rgba(0, 0, 0, 0.5);
-    padding: 2px 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.text-primary, .task-manager {
+    color: #66d9a3 !important;
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.9);
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Additional status colors */
+.status-completed {
+    color: #4682b4 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.status-in-progress {
+    color: #ffd700 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.status-canceled {
+    color: #ff69b4 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.notes-comments {
+    color: #e6e6fa !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px 8px;
     border-radius: 4px;
 }
 
@@ -246,20 +295,58 @@ p, .card-text, .list-group-item {
     border-color: rgba(76, 175, 80, 0.6) !important;
 }
 
-.btn-warning {
+.btn-warning, .btn-pending {
     background: linear-gradient(135deg, 
-        rgba(255, 140, 0, 0.9) 0%, 
-        rgba(230, 115, 0, 0.9) 100%) !important;
-    border-color: rgba(255, 140, 0, 0.8) !important;
+        rgba(255, 167, 38, 0.9) 0%, 
+        rgba(255, 143, 0, 0.9) 100%) !important;
+    border-color: rgba(255, 167, 38, 0.8) !important;
     color: #ffffff !important;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-.btn-danger {
+.btn-danger, .btn-high-priority {
     background: linear-gradient(135deg, 
-        rgba(244, 67, 54, 0.8) 0%, 
-        rgba(198, 40, 40, 0.8) 100%) !important;
-    border-color: rgba(244, 67, 54, 0.6) !important;
+        rgba(255, 71, 87, 0.9) 0%, 
+        rgba(220, 53, 69, 0.9) 100%) !important;
+    border-color: rgba(255, 71, 87, 0.8) !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.btn-info, .btn-upcoming {
+    background: linear-gradient(135deg, 
+        rgba(135, 206, 235, 0.9) 0%, 
+        rgba(100, 149, 237, 0.9) 100%) !important;
+    border-color: rgba(135, 206, 235, 0.8) !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.btn-task-manager {
+    background: linear-gradient(135deg, 
+        rgba(102, 217, 163, 0.9) 0%, 
+        rgba(76, 175, 80, 0.9) 100%) !important;
+    border-color: rgba(102, 217, 163, 0.8) !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.btn-completed {
+    background: linear-gradient(135deg, 
+        rgba(70, 130, 180, 0.9) 0%, 
+        rgba(65, 105, 225, 0.9) 100%) !important;
+    border-color: rgba(70, 130, 180, 0.8) !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.btn-in-progress {
+    background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.9) 0%, 
+        rgba(255, 193, 7, 0.9) 100%) !important;
+    border-color: rgba(255, 215, 0, 0.8) !important;
+    color: #000000 !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 /* Form controls */
@@ -297,12 +384,68 @@ p, .card-text, .list-group-item {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-.badge.bg-warning, .badge.text-bg-warning {
+.badge.bg-warning, .badge.text-bg-warning, .badge-pending {
     background: linear-gradient(135deg, 
-        rgba(255, 140, 0, 0.95) 0%, 
-        rgba(230, 115, 0, 0.95) 100%) !important;
+        rgba(255, 167, 38, 0.95) 0%, 
+        rgba(255, 143, 0, 0.95) 100%) !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255, 140, 0, 0.8);
+    border: 1px solid rgba(255, 167, 38, 0.8);
+}
+
+.badge-high-priority {
+    background: linear-gradient(135deg, 
+        rgba(255, 71, 87, 0.95) 0%, 
+        rgba(220, 53, 69, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 71, 87, 0.8);
+}
+
+.badge-upcoming {
+    background: linear-gradient(135deg, 
+        rgba(135, 206, 235, 0.95) 0%, 
+        rgba(100, 149, 237, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(135, 206, 235, 0.8);
+}
+
+.badge-task-manager {
+    background: linear-gradient(135deg, 
+        rgba(102, 217, 163, 0.95) 0%, 
+        rgba(76, 175, 80, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(102, 217, 163, 0.8);
+}
+
+.badge-completed {
+    background: linear-gradient(135deg, 
+        rgba(70, 130, 180, 0.95) 0%, 
+        rgba(65, 105, 225, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(70, 130, 180, 0.8);
+}
+
+.badge-in-progress {
+    background: linear-gradient(135deg, 
+        rgba(255, 215, 0, 0.95) 0%, 
+        rgba(255, 193, 7, 0.95) 100%) !important;
+    color: #000000 !important;
+    border: 1px solid rgba(255, 215, 0, 0.8);
+}
+
+.badge-canceled {
+    background: linear-gradient(135deg, 
+        rgba(255, 105, 180, 0.95) 0%, 
+        rgba(255, 20, 147, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 105, 180, 0.8);
+}
+
+.badge-notes {
+    background: linear-gradient(135deg, 
+        rgba(230, 230, 250, 0.95) 0%, 
+        rgba(216, 191, 216, 0.95) 100%) !important;
+    color: #4a4a4a !important;
+    border: 1px solid rgba(230, 230, 250, 0.8);
 }
 
 .badge.bg-info, .badge.text-bg-info {
