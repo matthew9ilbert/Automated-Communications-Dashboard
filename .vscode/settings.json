@@ -1,0 +1,11 @@
+{
+    "python.analysis.extraPaths": [
+        "./werkzeug/src",
+        "./sqlalchemy/lib",
+        "./flask-sqlalchemy/src",
+        "./apscheduler/src",
+        "./repos/flask/src",
+        "./repos/flask-sqlalchemy/src",
+        "./repos/sqlalchemy/lib"
+    ]
+}
