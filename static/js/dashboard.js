@@ -553,10 +553,17 @@ function showConfirmDialog(message, onConfirm, onCancel = null) {
 function showNotification(message, type = 'info', duration = DASHBOARD_CONFIG.notificationDuration) {
     const notification = document.createElement('div');
     notification.className = `alert alert-${type} alert-dismissible fade show notification-toast`;
-    notification.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
+    
+    // Create message text node to prevent XSS
+    const messageText = document.createTextNode(message);
+    notification.appendChild(messageText);
+    
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'btn-close';
+    closeButton.setAttribute('data-bs-dismiss', 'alert');
+    notification.appendChild(closeButton);
     
     // Add to page
     const container = document.querySelector('.container') || document.body;
