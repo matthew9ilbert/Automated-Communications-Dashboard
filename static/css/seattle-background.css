@@ -173,19 +173,19 @@ p, .card-text, .list-group-item {
 }
 
 .text-info {
-    color: #004085 !important;
+    color: #b3d9ff !important;
     text-shadow: 0 3px 8px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
     padding: 2px 6px;
     border-radius: 4px;
 }
 
 .text-primary {
-    color: #004085 !important;
+    color: #cce7ff !important;
     text-shadow: 0 3px 8px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
     padding: 2px 6px;
     border-radius: 4px;
 }
@@ -231,9 +231,9 @@ p, .card-text, .list-group-item {
 
 .btn-primary {
     background: linear-gradient(135deg, 
-        rgba(0, 64, 133, 0.9) 0%, 
-        rgba(0, 48, 100, 0.9) 100%) !important;
-    border-color: rgba(0, 64, 133, 0.8) !important;
+        rgba(102, 178, 255, 0.9) 0%, 
+        rgba(76, 150, 230, 0.9) 100%) !important;
+    border-color: rgba(102, 178, 255, 0.8) !important;
     color: #ffffff !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
     font-weight: 600;
@@ -307,10 +307,10 @@ p, .card-text, .list-group-item {
 
 .badge.bg-info, .badge.text-bg-info {
     background: linear-gradient(135deg, 
-        rgba(0, 64, 133, 0.95) 0%, 
-        rgba(0, 48, 100, 0.95) 100%) !important;
+        rgba(102, 178, 255, 0.95) 0%, 
+        rgba(76, 150, 230, 0.95) 100%) !important;
     color: #ffffff !important;
-    border: 1px solid rgba(0, 64, 133, 0.8);
+    border: 1px solid rgba(102, 178, 255, 0.8);
 }
 
 .badge.bg-secondary, .badge.text-bg-secondary {
@@ -348,8 +348,8 @@ p, .card-text, .list-group-item {
 }
 
 .alert-primary {
-    background: rgba(0, 64, 133, 0.25) !important;
-    border-color: rgba(0, 64, 133, 0.6) !important;
+    background: rgba(102, 178, 255, 0.25) !important;
+    border-color: rgba(102, 178, 255, 0.6) !important;
     color: #ffffff !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
