@@ -17,16 +17,16 @@ def register_routes(app):
         """Main dashboard view"""
         try:
             # Get recent high priority messages
-            high_priority_messages = Message.query.filter_by(priority='High').order_by(Message.created_at.desc()).limit(5).all()
+            high_priority_messages = Message.query.filter_by(priority='High').order_by(Message.created_at.desc()).limit(10).all()
             
             # Get pending tasks
-            pending_tasks = Task.query.filter(Task.status.in_(['Not Started', 'In Progress'])).order_by(Task.created_at.desc()).limit(10).all()
+            pending_tasks = Task.query.filter(Task.status.in_(['Not Started', 'In Progress'])).order_by(Task.created_at.desc()).limit(15).all()
             
             # Get upcoming events
-            upcoming_events = CalendarEvent.query.filter(CalendarEvent.start_time >= datetime.now()).order_by(CalendarEvent.start_time).limit(5).all()
+            upcoming_events = CalendarEvent.query.filter(CalendarEvent.start_time >= datetime.now()).order_by(CalendarEvent.start_time).limit(10).all()
             
             # Get recent announcements
-            recent_announcements = Announcement.query.filter_by(active=True).order_by(Announcement.created_at.desc()).limit(3).all()
+            recent_announcements = Announcement.query.filter_by(active=True).order_by(Announcement.created_at.desc()).limit(8).all()
             
             # Get pending reminders
             pending_reminders = Reminder.query.filter_by(acknowledged=False).order_by(Reminder.next_reminder).limit(5).all()
