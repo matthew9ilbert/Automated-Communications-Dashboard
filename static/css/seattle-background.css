@@ -135,15 +135,16 @@ p, .card-text, .list-group-item {
     font-weight: 500;
 }
 
-/* Specific styles for dashboard statistics */
-.stats-number, .display-4, .display-3, .display-2, .display-1 {
+/* Specific styles for dashboard statistics and numbers */
+.stats-number, .display-4, .display-3, .display-2, .display-1, .task-number, .count-display {
     color: #f8f9fa !important;
     text-shadow: 0 4px 16px rgba(0, 0, 0, 0.95);
     font-weight: 800;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(255, 255, 255, 0.2);
     padding: 12px 16px;
     border-radius: 8px;
     border: 2px solid rgba(248, 249, 250, 0.6);
+    backdrop-filter: blur(10px);
 }
 
 /* Dashboard card titles and subtitles */
@@ -255,6 +256,30 @@ p, .card-text, .list-group-item {
     border-radius: 5px;
     backdrop-filter: blur(10px);
     margin: 4px 0;
+}
+
+/* High priority styling - red text and icons */
+.high-priority-text, .priority-high-text {
+    color: #ff3838 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    font-weight: 700;
+}
+
+.high-priority-icon, .priority-high-icon {
+    color: #ff3838 !important;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.9));
+}
+
+/* Pending tasks styling - orange text and icons */
+.pending-tasks-text, .priority-pending-text {
+    color: #ffb74d !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    font-weight: 700;
+}
+
+.pending-tasks-icon, .priority-pending-icon {
+    color: #ffb74d !important;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.9));
 }
 
 /* Icon containers within cards */
