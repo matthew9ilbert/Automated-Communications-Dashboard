@@ -102,7 +102,7 @@
                     </h5>
                     <a href="{{ url_for('messages', priority='High') }}" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                     {% if high_priority_messages %}
                         {% for message in high_priority_messages %}
                         <div class="border-bottom pb-2 mb-2">
@@ -151,7 +151,7 @@
                     </h5>
                     <a href="{{ url_for('tasks') }}" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                     {% if pending_tasks %}
                         {% for task in pending_tasks %}
                         <div class="border-bottom pb-2 mb-2">
@@ -200,7 +200,7 @@
                     </h5>
                     <a href="{{ url_for('calendar') }}" class="btn btn-sm btn-outline-primary">View Calendar</a>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                     {% if upcoming_events %}
                         {% for event in upcoming_events %}
                         <div class="border-bottom pb-2 mb-2">
@@ -232,7 +232,7 @@
                     </h5>
                     <a href="{{ url_for('announcements') }}" class="btn btn-sm btn-outline-primary">View All</a>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                     {% if recent_announcements %}
                         {% for announcement in recent_announcements %}
                         <div class="border-bottom pb-2 mb-2">
