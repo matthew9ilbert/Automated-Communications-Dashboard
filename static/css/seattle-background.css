@@ -61,29 +61,31 @@ body {
     z-index: 2;
 }
 
-/* Optimized translucent card backgrounds with GPU acceleration */
+/* Enhanced card contrast for bright backgrounds */
 .card {
     background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.12) 0%, 
-        rgba(255, 255, 255, 0.08) 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        rgba(0, 0, 0, 0.4) 0%, 
+        rgba(0, 0, 0, 0.3) 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
     backdrop-filter: blur(25px) saturate(180%);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        0 12px 40px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     color: #ffffff !important;
     will-change: transform;
     transform: translateZ(0);
 }
 
 .card-header {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.25) !important;
     color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 .card-body {
     color: #ffffff !important;
+    background: rgba(0, 0, 0, 0.1) !important;
 }
 
 .navbar {
@@ -106,20 +108,42 @@ body {
     color: #e3f2fd !important;
 }
 
-/* Enhanced text visibility and readability */
+/* Enhanced text visibility against bright backgrounds */
 .text-muted {
-    color: rgba(255, 255, 255, 0.8) !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
 }
 
 h1, h2, h3, h4, h5, h6 {
     color: #ffffff !important;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.8);
+    font-weight: 600;
 }
 
 p, .card-text, .list-group-item {
     color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+    font-weight: 400;
+}
+
+/* High contrast text for critical elements */
+.text-warning {
+    color: #ff8c00 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    font-weight: 600;
+}
+
+.text-info {
+    color: #17a2b8 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
+}
+
+.text-primary {
+    color: #007bff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    font-weight: 500;
 }
 
 /* Table enhancements with better contrast */
@@ -177,9 +201,11 @@ p, .card-text, .list-group-item {
 
 .btn-warning {
     background: linear-gradient(135deg, 
-        rgba(255, 193, 7, 0.8) 0%, 
-        rgba(255, 152, 0, 0.8) 100%) !important;
-    border-color: rgba(255, 193, 7, 0.6) !important;
+        rgba(255, 140, 0, 0.9) 0%, 
+        rgba(230, 115, 0, 0.9) 100%) !important;
+    border-color: rgba(255, 140, 0, 0.8) !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .btn-danger {
@@ -218,10 +244,34 @@ p, .card-text, .list-group-item {
     background: rgba(255, 255, 255, 0.12) !important;
 }
 
-/* Badge enhancements */
+/* Badge enhancements with improved contrast */
 .badge {
     backdrop-filter: blur(10px);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.badge.bg-warning, .badge.text-bg-warning {
+    background: linear-gradient(135deg, 
+        rgba(255, 140, 0, 0.95) 0%, 
+        rgba(230, 115, 0, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 140, 0, 0.8);
+}
+
+.badge.bg-info, .badge.text-bg-info {
+    background: linear-gradient(135deg, 
+        rgba(13, 110, 253, 0.95) 0%, 
+        rgba(10, 88, 202, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(13, 110, 253, 0.8);
+}
+
+.badge.bg-secondary, .badge.text-bg-secondary {
+    background: linear-gradient(135deg, 
+        rgba(108, 117, 125, 0.95) 0%, 
+        rgba(73, 80, 87, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(108, 117, 125, 0.8);
 }
 
 /* Modal enhancements */
@@ -261,8 +311,10 @@ p, .card-text, .list-group-item {
 }
 
 .alert-warning {
-    background: rgba(255, 193, 7, 0.15) !important;
-    border-color: rgba(255, 193, 7, 0.3) !important;
+    background: rgba(255, 140, 0, 0.2) !important;
+    border-color: rgba(255, 140, 0, 0.5) !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .alert-danger {
