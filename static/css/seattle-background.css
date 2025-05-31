@@ -85,7 +85,8 @@ body {
 
 .card-body {
     color: #ffffff !important;
-    background: rgba(0, 0, 0, 0.1) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px);
 }
 
 .navbar {
@@ -166,77 +167,105 @@ p, .card-text, .list-group-item {
 }
 
 /* Priority and status color schemes */
-.text-warning, .priority-high {
-    color: #ff4757 !important;
+.text-warning, .priority-high, .text-high-priority {
+    color: #ff3838 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.2);
     padding: 4px 8px;
     border-radius: 4px;
+    backdrop-filter: blur(8px);
 }
 
-.priority-pending, .status-pending {
-    color: #ffa726 !important;
+.priority-pending, .status-pending, .text-pending {
+    color: #ffb74d !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.2);
     padding: 4px 8px;
     border-radius: 4px;
+    backdrop-filter: blur(8px);
 }
 
 .text-info, .upcoming-event {
     color: #87ceeb !important;
     text-shadow: 0 3px 8px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.2);
     padding: 4px 8px;
     border-radius: 4px;
+    backdrop-filter: blur(8px);
 }
 
 .text-primary, .task-manager {
     color: #66d9a3 !important;
     text-shadow: 0 3px 8px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.2);
     padding: 4px 8px;
     border-radius: 4px;
+    backdrop-filter: blur(8px);
 }
 
-/* Additional status colors */
+/* Additional status colors with lighter backgrounds */
 .status-completed {
     color: #4682b4 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.2);
     padding: 4px 8px;
     border-radius: 4px;
+    backdrop-filter: blur(8px);
 }
 
 .status-in-progress {
     color: #ffd700 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.2);
     padding: 4px 8px;
     border-radius: 4px;
+    backdrop-filter: blur(8px);
 }
 
 .status-canceled {
     color: #ff69b4 !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 600;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.2);
     padding: 4px 8px;
     border-radius: 4px;
+    backdrop-filter: blur(8px);
 }
 
 .notes-comments {
     color: #e6e6fa !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
     font-weight: 500;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.18);
     padding: 4px 8px;
     border-radius: 4px;
+    backdrop-filter: blur(8px);
+}
+
+/* Task card content areas */
+.task-content, .card-text, .task-info {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 10px;
+    border-radius: 5px;
+    backdrop-filter: blur(10px);
+    margin: 4px 0;
+}
+
+/* Icon containers within cards */
+.icon-container, .task-icon, .priority-icon {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px;
+    border-radius: 50%;
+    backdrop-filter: blur(8px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Table enhancements with better contrast */
