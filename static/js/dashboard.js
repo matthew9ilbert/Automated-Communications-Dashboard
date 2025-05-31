@@ -39,6 +39,13 @@ function simulateTimeOfDay(testHour) {
     
     const root = document.documentElement;
     
+    // Check for morning time window (6:00 AM - 10:00 AM)
+    let backgroundImage = "url('/static/IMG_6138.jpeg')"; // Default dusk image
+    if (timeDecimal >= 6 && timeDecimal <= 10) {
+        backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image
+    }
+    root.style.setProperty('--bg-image', backgroundImage);
+    
     if (timeDecimal >= sunrise && timeDecimal <= sunset) {
         // Daytime - show sun and bright background
         const sunProgress = (timeDecimal - sunrise) / (sunset - sunrise);
@@ -102,6 +109,13 @@ function updateDynamicBackground() {
     const sunset = solarNoon + (hourAngle * 12 / Math.PI);
     
     const root = document.documentElement;
+    
+    // Check for morning time window (6:00 AM - 10:00 AM)
+    let backgroundImage = "url('/static/IMG_6138.jpeg')"; // Default dusk image
+    if (timeDecimal >= 6 && timeDecimal <= 10) {
+        backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image
+    }
+    root.style.setProperty('--bg-image', backgroundImage);
     
     if (timeDecimal >= sunrise && timeDecimal <= sunset) {
         // Daytime - show sun and bright background
