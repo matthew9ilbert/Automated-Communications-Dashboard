@@ -20,7 +20,7 @@
     background-size: cover;
     background-position: center bottom;
     background-repeat: no-repeat;
-    opacity: 0.3;
+    opacity: 0.6;
 }
 
 .seattle-background::after {
@@ -31,9 +31,9 @@
     right: 0;
     bottom: 0;
     background: linear-gradient(180deg, 
-        rgba(0, 0, 0, 0.8) 0%, 
-        rgba(0, 0, 0, 0.6) 50%, 
-        rgba(0, 0, 0, 0.9) 100%
+        rgba(0, 0, 0, 0.4) 0%, 
+        rgba(0, 0, 0, 0.2) 50%, 
+        rgba(0, 0, 0, 0.5) 100%
     );
     z-index: -1;
 }
@@ -49,17 +49,19 @@ body {
     z-index: 2;
 }
 
-/* Enhance card backgrounds for better readability */
+/* Enhanced translucent card backgrounds */
 .card {
-    background-color: rgba(var(--bs-dark-rgb), 0.85) !important;
-    border-color: rgba(var(--bs-border-color), 0.3) !important;
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .navbar {
-    background-color: rgba(var(--bs-dark-rgb), 0.9) !important;
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(var(--bs-border-color), 0.2);
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 }
 
 /* Enhance text visibility */
