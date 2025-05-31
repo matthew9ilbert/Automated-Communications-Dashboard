@@ -108,6 +108,10 @@ body {
     color: #0d6efd !important;
 }
 
+.card-body .text-orange {
+    color: #ff6300 !important;
+}
+
 .navbar {
     background: linear-gradient(135deg, 
         rgba(255, 255, 255, 0.15) 0%, 

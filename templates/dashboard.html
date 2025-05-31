@@ -38,14 +38,14 @@
         
         <div class="col-xl-3 col-md-6 mb-3">
             <a href="{{ url_for('tasks', status='Not Started,In Progress') }}" class="text-decoration-none">
-                <div class="card border-warning">
+                <div class="card border-orange">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h5 class="card-title text-warning">Pending Tasks</h5>
-                                <h2 class="mb-0 text-warning">{{ stats.pending_tasks or 0 }}</h2>
+                                <h5 class="card-title text-orange">Pending Tasks</h5>
+                                <h2 class="mb-0 text-orange">{{ stats.pending_tasks or 0 }}</h2>
                             </div>
-                            <div class="text-warning">
+                            <div class="text-orange">
                                 <i class="fas fa-clock fa-2x"></i>
                             </div>
                         </div>
