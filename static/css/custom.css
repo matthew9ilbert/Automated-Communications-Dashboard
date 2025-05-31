@@ -42,6 +42,15 @@
     border-radius: 0 0 20px 20px !important;
 }
 
+/* Compact View All/Calendar buttons */
+.card-header .btn {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 15px;
+    min-width: 80px;
+    margin-top: 0.25rem;
+}
+
 .card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
