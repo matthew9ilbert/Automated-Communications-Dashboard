@@ -20,9 +20,12 @@
     background-size: cover;
     background-position: center bottom;
     background-repeat: no-repeat;
-    opacity: 0.6;
+    opacity: var(--bg-opacity, 0.6);
+    filter: brightness(var(--bg-brightness, 1)) hue-rotate(var(--bg-hue, 0deg));
+    transition: all 2s ease-in-out;
 }
 
+/* Dynamic sun overlay for daytime */
 .seattle-background::after {
     content: '';
     position: absolute;
@@ -30,12 +33,15 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(180deg, 
-        rgba(0, 0, 0, 0.4) 0%, 
-        rgba(0, 0, 0, 0.2) 50%, 
-        rgba(0, 0, 0, 0.5) 100%
-    );
+    background: radial-gradient(circle at var(--sun-x, 70%) var(--sun-y, 30%), 
+                rgba(255, 223, 0, 0.4) 0%, 
+                rgba(255, 193, 7, 0.2) 10%, 
+                rgba(255, 243, 135, 0.1) 20%, 
+                transparent 30%);
+    opacity: var(--sun-opacity, 0);
+    transition: opacity 2s ease-in-out;
     z-index: -1;
+    pointer-events: none;
 }
 
 /* Enhanced content visibility */

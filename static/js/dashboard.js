@@ -20,6 +20,57 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
+ * Dynamic background controller based on time of day
+ */
+function updateDynamicBackground() {
+    const now = new Date();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const timeDecimal = hour + minute / 60;
+    
+    // Seattle coordinates for sun calculations (approximate)
+    const latitude = 47.6062;
+    const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+    
+    // Calculate sunrise and sunset times (simplified)
+    const solarNoon = 12;
+    const declination = 23.45 * Math.sin((360 * (284 + dayOfYear) / 365) * Math.PI / 180);
+    const hourAngle = Math.acos(-Math.tan(latitude * Math.PI / 180) * Math.tan(declination * Math.PI / 180));
+    const sunrise = solarNoon - (hourAngle * 12 / Math.PI);
+    const sunset = solarNoon + (hourAngle * 12 / Math.PI);
+    
+    const root = document.documentElement;
+    
+    if (timeDecimal >= sunrise && timeDecimal <= sunset) {
+        // Daytime - show sun and bright background
+        const sunProgress = (timeDecimal - sunrise) / (sunset - sunrise);
+        const sunX = 20 + (sunProgress * 60); // Sun moves from 20% to 80% across sky
+        const sunY = 20 + Math.sin(sunProgress * Math.PI) * -10; // Arc motion
+        
+        // Brightness varies throughout day
+        let brightness = 1.2;
+        if (timeDecimal < sunrise + 1) {
+            brightness = 0.8 + (timeDecimal - sunrise) * 0.4; // Dawn
+        } else if (timeDecimal > sunset - 1) {
+            brightness = 1.2 - (timeDecimal - (sunset - 1)) * 0.4; // Dusk
+        }
+        
+        root.style.setProperty('--sun-x', sunX + '%');
+        root.style.setProperty('--sun-y', sunY + '%');
+        root.style.setProperty('--sun-opacity', '1');
+        root.style.setProperty('--bg-brightness', brightness);
+        root.style.setProperty('--bg-opacity', '0.7');
+        root.style.setProperty('--bg-hue', '0deg');
+    } else {
+        // Nighttime - hide sun, darker background
+        root.style.setProperty('--sun-opacity', '0');
+        root.style.setProperty('--bg-brightness', '0.6');
+        root.style.setProperty('--bg-opacity', '0.6');
+        root.style.setProperty('--bg-hue', '20deg'); // Slight warm tint for night
+    }
+}
+
+/**
  * Initialize dashboard components
  */
 function initializeDashboard() {
@@ -43,6 +94,12 @@ function initializeDashboard() {
     
     // Set up real-time updates
     setupWebSocket();
+    
+    // Initialize dynamic background
+    updateDynamicBackground();
+    
+    // Update background every 5 minutes
+    setInterval(updateDynamicBackground, 300000);
     
     console.log('Dashboard initialized successfully');
 }
