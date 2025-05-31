@@ -18,9 +18,9 @@
     bottom: 0;
     background-image: url('/static/IMG_6138.jpeg');
     background-size: cover;
-    background-position: center bottom;
+    background-position: center center;
     background-repeat: no-repeat;
-    opacity: 0.6;
+    opacity: 0.8;
 }
 
 .seattle-background::after {
@@ -51,9 +51,9 @@ body {
 
 /* Enhanced translucent card backgrounds */
 .card {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(10px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
