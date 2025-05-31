@@ -80,8 +80,8 @@ a .card:hover h2 {
 }
 
 .card.border-warning {
-    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
-    border: 1px solid rgba(255, 193, 7, 0.2);
+    background: linear-gradient(135deg, rgba(255, 235, 59, 0.1), rgba(255, 235, 59, 0.05));
+    border: 1px solid rgba(255, 235, 59, 0.2);
 }
 
 .card.border-danger {
