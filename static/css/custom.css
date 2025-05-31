@@ -57,6 +57,11 @@
     line-height: 1;
 }
 
+/* Footer text size reduction */
+footer p {
+    font-size: 0.7rem !important;
+}
+
 .card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
