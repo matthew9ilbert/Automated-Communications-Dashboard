@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}EVS Manager Dashboard{% endblock %}</title>
+    
+    <!-- Favicon and App Icons -->
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='generated-icon.png') }}">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="EVS Manager - Healthcare Communications Platform">
+    <meta property="og:description" content="Advanced healthcare facility management with real-time communications, task coordination, and integrated analytics dashboard">
+    <meta property="og:image" content="{{ url_for('static', filename='app-thumbnail.png', _external=True) }}">
+    <meta property="og:url" content="{{ request.url }}">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EVS Manager - Healthcare Communications Platform">
+    <meta name="twitter:description" content="Advanced healthcare facility management with real-time communications, task coordination, and integrated analytics dashboard">
+    <meta name="twitter:image" content="{{ url_for('static', filename='app-thumbnail.png', _external=True) }}">
+    
+    <!-- App Description -->
+    <meta name="description" content="EVS Manager: Professional healthcare facility management platform featuring real-time communications, intelligent task workflows, and comprehensive analytics dashboard">
 
     <!-- Bootstrap CSS (Replit themed) -->
     <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
