@@ -10,7 +10,7 @@ run = ["sh", "-c", "gunicorn --bind 0.0.0.0:5000 main:app"]
 build = ["sh", "-c", "gunicorn --bind 0.0.0.0:5000 main:app"]
 
 [workflows]
-runButton = "Project"
+runButton = "Start Flask App"
 
 [[workflows.workflow]]
 name = "Project"
@@ -29,6 +29,15 @@ author = "agent"
 task = "shell.exec"
 args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Start Flask App"
+author = 43305122
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
 
 [[ports]]
 localPort = 5000

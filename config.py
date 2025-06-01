@@ -29,6 +29,15 @@ class Config:
     # iOS Shortcut integration
     IOS_SHORTCUT_TOKEN = os.environ.get('IOS_SHORTCUT_TOKEN', 'a1561b33-9322-4749-a93c-9265a90905da')
     
+    # Apple Mail/Calendar integration (requires app-specific passwords)
+    APPLE_MAIL_USERNAME = os.environ.get('APPLE_MAIL_USERNAME', '')
+    APPLE_MAIL_APP_PASSWORD = os.environ.get('APPLE_MAIL_APP_PASSWORD', '')
+    APPLE_CALENDAR_USERNAME = os.environ.get('APPLE_CALENDAR_USERNAME', '')
+    APPLE_CALENDAR_APP_PASSWORD = os.environ.get('APPLE_CALENDAR_APP_PASSWORD', '')
+    
+    # Application base URL for webhooks
+    BASE_URL = os.environ.get('BASE_URL', 'https://your-repl-url.replit.dev')
+    
     # Message scanning settings
     SCAN_INTERVAL_MINUTES = 15
     REMINDER_INTERVAL_MINUTES = 30
@@ -60,8 +69,8 @@ class Config:
         warnings = []
         
         # Check database URL
-        if not cls.DATABASE_URL:
-            errors.append("DATABASE_URL is not configured")
+        if not cls.SQLALCHEMY_DATABASE_URI:
+            errors.append("SQLALCHEMY_DATABASE_URI is not configured")
         
         # Check secret key
         if not cls.SECRET_KEY or cls.SECRET_KEY == 'dev-secret-key':
