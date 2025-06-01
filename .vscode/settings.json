@@ -7,5 +7,6 @@
         "./repos/flask/src",
         "./repos/flask-sqlalchemy/src",
         "./repos/sqlalchemy/lib"
-    ]
+    ],
+    "gitlens.ai.largePromptWarningThreshold": 700000
 }
