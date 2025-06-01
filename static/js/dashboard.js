@@ -50,9 +50,9 @@ function simulateTimeOfDay(testHour) {
     } else if (timeDecimal >= 14 && timeDecimal < 18) {
         backgroundImage = "url('/static/IMG_6143_afternoon_correct.jpeg')"; // Afternoon image (2-6 PM)
     } else if (timeDecimal >= 18 && timeDecimal < 22) {
-        backgroundImage = "url('/static/IMG_6146.jpeg')"; // Evening image (6-10 PM)
+        backgroundImage = "url('/static/IMG_6161_evening.jpeg')"; // Evening image (6-10 PM)
     } else if (timeDecimal >= 22 || timeDecimal < 2) {
-        backgroundImage = "url('/static/IMG_6138_late_night.jpeg')"; // Late night image (10 PM-2 AM)
+        backgroundImage = "url('/static/IMG_6161_late_night.jpeg')"; // Late night image (10 PM-2 AM)
     }
     root.style.setProperty('--bg-image', backgroundImage);
 
@@ -131,9 +131,9 @@ function updateDynamicBackground() {
     } else if (timeDecimal >= 14 && timeDecimal < 18) {
         backgroundImage = "url('/static/IMG_6143_afternoon_correct.jpeg')"; // Afternoon image (2-6 PM)
     } else if (timeDecimal >= 18 && timeDecimal < 22) {
-        backgroundImage = "url('/static/IMG_6146.jpeg')"; // Evening image (6-10 PM)
+        backgroundImage = "url('/static/IMG_6161_evening.jpeg')"; // Evening image (6-10 PM)
     } else if (timeDecimal >= 22 || timeDecimal < 2) {
-        backgroundImage = "url('/static/IMG_6138_late_night.jpeg')"; // Late night image (10 PM-2 AM)
+        backgroundImage = "url('/static/IMG_6161_late_night.jpeg')"; // Late night image (10 PM-2 AM)
     }
     root.style.setProperty('--bg-image', backgroundImage);
 
