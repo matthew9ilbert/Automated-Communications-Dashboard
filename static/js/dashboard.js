@@ -42,7 +42,7 @@ function simulateTimeOfDay(testHour) {
     // Check for time-based background images
     let backgroundImage = "url('/static/IMG_6138.jpeg')"; // Default fallback
     if (timeDecimal >= 2 && timeDecimal < 6) {
-        backgroundImage = "url('/static/IMG_6146_early_morning.jpeg')"; // Early morning image (2-6 AM)
+        backgroundImage = "url('/static/IMG_6161_early_morning.jpeg')"; // Early morning image (2-6 AM)
     } else if (timeDecimal >= 6 && timeDecimal < 10) {
         backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image (6-10 AM)
     } else if (timeDecimal >= 10 && timeDecimal < 14) {
@@ -123,7 +123,7 @@ function updateDynamicBackground() {
     // Check for time-based background images
     let backgroundImage = "url('/static/IMG_6138.jpeg')"; // Default fallback
     if (timeDecimal >= 2 && timeDecimal < 6) {
-        backgroundImage = "url('/static/IMG_6146_early_morning.jpeg')"; // Early morning image (2-6 AM)
+        backgroundImage = "url('/static/IMG_6161_early_morning.jpeg')"; // Early morning image (2-6 AM)
     } else if (timeDecimal >= 6 && timeDecimal < 10) {
         backgroundImage = "url('/static/IMG_6143.jpeg')"; // Morning image (6-10 AM)
     } else if (timeDecimal >= 10 && timeDecimal < 14) {
