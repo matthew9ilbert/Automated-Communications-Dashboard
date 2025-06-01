@@ -62,6 +62,35 @@ class Config:
         'follow up', 'followup', 'review', 'check'
     ]
     
+    # AI Service settings
+    AI_FEATURES_ENABLED = True
+    AI_SETTINGS = {
+        'priority': {
+            'high_threshold': 0.5,
+            'medium_threshold': 0.3,
+            'urgent_terms_weight': 0.4,
+            'deadline_terms_weight': 0.2,
+            'action_terms_weight': 0.2,
+            'date_weight': 0.1,
+            'sentiment_weight': 0.1
+        },
+        'similarity': {
+            'threshold': 0.3,
+            'max_messages': 100,
+            'min_similarity_score': 0.3
+        },
+        'summarization': {
+            'max_length': 150,
+            'min_sentences': 3,
+            'max_clusters': 3
+        },
+        'task_dependencies': {
+            'similarity_threshold': 0.8,
+            'title_match_weight': 0.6,
+            'semantic_match_weight': 0.4
+        }
+    }
+    
     @classmethod
     def validate_config(cls):
         """Validate configuration settings"""
@@ -84,15 +113,17 @@ class Config:
         if not cls.FACILITIES:
             warnings.append("No facilities configured")
         
-        # Print validation results
-        if errors:
-            print("Configuration ERRORS:")
-            for error in errors:
-                print(f"  - {error}")
+        # Check Microsoft integration
+        ms_config_complete = all([
+            cls.MICROSOFT_CLIENT_ID,
+            cls.MICROSOFT_CLIENT_SECRET,
+            cls.MICROSOFT_TENANT_ID
+        ])
+        if not ms_config_complete:
+            warnings.append('Microsoft Graph API configuration incomplete')
         
-        if warnings:
-            print("Configuration WARNINGS:")
-            for warning in warnings:
-                print(f"  - {warning}")
+        # Check Google integration
+        if not os.path.exists(cls.GOOGLE_CREDENTIALS_FILE):
+            warnings.append('Google credentials file not found')
         
         return len(errors) == 0, errors, warnings

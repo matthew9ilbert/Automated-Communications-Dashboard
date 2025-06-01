@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "PowerShell Attach to Host Process",
+            "type": "PowerShell",
+            "request": "attach"
+        },  
+        {
+            "name": "PowerShell: Attach to Process",
+            "type": "PowerShell",
+            "request": "attach",
+            "processId": 0 // Replace 0 with the actual process ID you want to attach to
+        },
+        {
+            "name": "PowerShell: Attach to Process by Name",
+            "type": "PowerShell",
+            "request": "attach"
+        },
+        {
+            "name": "Launch PowerShell Integrated Console",
+            "type": "PowerShell",
+            "request": "launch"
+        },
+        {
+            "name": "Launch PowerShell Script",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${file}",
+            "args": []
+        },
+        {
+            "name": "PowerShell: Run Script in Terminal",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${file}",
+            "args": []
+        }
+    ]
+}

@@ -1,10 +1,13 @@
 import logging
 from datetime import datetime, timedelta
+import os
 from flask import render_template, request, redirect, url_for, flash, jsonify
+from sqlalchemy.exc import SQLAlchemyError
 from models import Message, Task, CalendarEvent, StaffMember, StaffAssignment, Announcement, Reminder, db
 from google_services import sheets_service, calendar_service
 from microsoft_services import graph_service
 from message_scanner import message_scanner
+from ai_services import ai_services
 from config import Config
 
 logger = logging.getLogger(__name__)
@@ -21,6 +24,9 @@ def register_routes(app):
             
             # Get pending tasks
             pending_tasks = Task.query.filter(Task.status.in_(['Not Started', 'In Progress'])).order_by(Task.created_at.desc()).limit(15).all()
+            
+            # Analyze task dependencies
+            task_dependencies = ai_services.analyze_task_dependencies(pending_tasks)
             
             # Get upcoming events
             upcoming_events = CalendarEvent.query.filter(CalendarEvent.start_time >= datetime.now()).order_by(CalendarEvent.start_time).limit(10).all()
@@ -42,14 +48,20 @@ def register_routes(app):
             return render_template('dashboard.html',
                                  high_priority_messages=high_priority_messages,
                                  pending_tasks=pending_tasks,
+                                 task_dependencies=task_dependencies,
                                  upcoming_events=upcoming_events,
                                  recent_announcements=recent_announcements,
                                  pending_reminders=pending_reminders,
                                  stats=stats,
                                  facilities=Config.FACILITIES,
                                  now=datetime.now())
+        except SQLAlchemyError as e:
+            logger.error(f"Database error loading dashboard: {str(e)}")
+            db.session.rollback()
+            flash('Database error while loading dashboard data', 'error')
+            return render_template('dashboard.html', stats={}, facilities=Config.FACILITIES, now=datetime.now())
         except Exception as e:
-            logger.error(f"Error loading dashboard: {e}")
+            logger.error(f"Error loading dashboard: {str(e)}")
             flash('Error loading dashboard data', 'error')
             return render_template('dashboard.html', stats={}, facilities=Config.FACILITIES, now=datetime.now())
     
@@ -76,8 +88,13 @@ def register_routes(app):
                                  messages=messages_paginated,
                                  priority_filter=priority_filter,
                                  source_filter=source_filter)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error loading messages: {str(e)}")
+            db.session.rollback()
+            flash('Database error while loading messages', 'error')
+            return render_template('messages.html', messages=None)
         except Exception as e:
-            logger.error(f"Error loading messages: {e}")
+            logger.error(f"Error loading messages: {str(e)}")
             flash('Error loading messages', 'error')
             return render_template('messages.html', messages=None)
     
@@ -198,24 +215,23 @@ def register_routes(app):
             elif len(sender) > 255:
                 sender = sender[:255]
             
-            # Validate source
-            valid_sources = ['text', 'email', 'teams', 'notes', 'api']
-            if source not in valid_sources:
-                source = 'api'
+            # Use AI to analyze priority and generate summary
+            priority, confidence = ai_services.analyze_message_priority(content)
+            summary = ai_services.generate_summary(content)
             
-            # Determine priority
-            try:
-                priority = message_scanner.determine_priority(content)
-            except Exception as e:
-                logger.warning(f"Error determining priority: {e}")
-                priority = 'Medium'  # Default fallback
+            # Find similar messages
+            similar_messages = ai_services.find_similar_messages(content)
+            
+            # Get suggested actions
+            suggested_actions = ai_services.suggest_actions(content)
             
             # Create message record
             message = Message(
                 sender=sender,
                 content=content,
                 source=source,
-                priority=priority
+                priority=priority,
+                summary=summary
             )
             db.session.add(message)
             db.session.commit()
@@ -225,7 +241,6 @@ def register_routes(app):
                 sheets_service.log_message(sender, content, source, priority)
             except Exception as e:
                 logger.warning(f"Failed to log to Google Sheets: {e}")
-                # Continue processing even if sheets logging fails
             
             # Process for immediate actions if high priority
             if priority == 'High':
@@ -233,7 +248,6 @@ def register_routes(app):
                     processing_result = message_scanner.process_message(message)
                 except Exception as e:
                     logger.error(f"Error processing high priority message: {e}")
-                    # Continue even if processing fails
             
             logger.info(f"Logged message from {sender} via API (ID: {message.id}, Priority: {priority})")
             
@@ -241,6 +255,10 @@ def register_routes(app):
                 'success': True,
                 'message_id': message.id,
                 'priority': priority,
+                'confidence': confidence,
+                'summary': summary,
+                'similar_messages': [{'id': msg.id, 'content': msg.content} for msg in similar_messages],
+                'suggested_actions': suggested_actions,
                 'message': 'Message logged successfully'
             })
             
@@ -248,6 +266,46 @@ def register_routes(app):
             logger.error(f"Error logging message via API: {e}")
             db.session.rollback()
             return jsonify({'error': 'Failed to log message'}), 500
+    
+    @app.route('/api/analyze_text', methods=['POST'])
+    def analyze_text():
+        """API endpoint to analyze text content"""
+        try:
+            if not request.is_json:
+                return jsonify({'error': 'Content-Type must be application/json'}), 400
+            
+            data = request.get_json()
+            content = data.get('content', '').strip()
+            
+            if not content:
+                return jsonify({'error': 'Content required'}), 400
+            
+            # Perform AI analysis
+            priority, confidence = ai_services.analyze_message_priority(content)
+            summary = ai_services.generate_summary(content)
+            suggested_actions = ai_services.suggest_actions(content)
+            similar_messages = ai_services.find_similar_messages(content)
+            
+            return jsonify({
+                'success': True,
+                'analysis': {
+                    'priority': priority,
+                    'confidence': confidence,
+                    'summary': summary,
+                    'suggested_actions': suggested_actions,
+                    'similar_messages': [
+                        {
+                            'id': msg.id,
+                            'content': msg.content,
+                            'created_at': msg.created_at.isoformat()
+                        } for msg in similar_messages
+                    ]
+                }
+            })
+            
+        except Exception as e:
+            logger.error(f"Error analyzing text: {e}")
+            return jsonify({'error': 'Failed to analyze text'}), 500
     
     # Form submission handlers
     @app.route('/update_task_status', methods=['POST'])

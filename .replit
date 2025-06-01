@@ -1,4 +1,4 @@
-modules = ["python-3.11"]
+modules = ["python-3.11", "postgresql-16"]
 
 [nix]
 channel = "stable-24_05"
@@ -10,7 +10,7 @@ run = ["sh", "-c", "gunicorn --bind 0.0.0.0:5000 main:app"]
 build = ["sh", "-c", "gunicorn --bind 0.0.0.0:5000 main:app"]
 
 [workflows]
-runButton = "Start Flask App"
+runButton = "Start application"
 
 [[workflows.workflow]]
 name = "Project"
