@@ -396,20 +396,25 @@ function startAutoRefresh() {
 /**
  * Refresh dashboard data
  */
-function refreshDashboard() {
-    // Update timestamp
-    updateLastRefreshTime();
+async function refreshDashboard() {
+    try {
+        // Update timestamp
+        updateLastRefreshTime();
 
-    // Refresh statistics
-    refreshStatistics();
+        // Refresh statistics with real API call
+        await refreshStatistics();
 
-    // Refresh recent items
-    refreshRecentItems();
+        // Refresh recent items
+        refreshRecentItems();
 
-    // Check for new notifications
-    checkForNotifications();
+        // Check for new notifications
+        checkForNotifications();
 
-    console.log('Dashboard refreshed at', new Date().toLocaleTimeString());
+        console.log('Dashboard refreshed at', new Date().toLocaleTimeString());
+    } catch (error) {
+        console.error('Error refreshing dashboard:', error);
+        showNotification('Failed to refresh dashboard data', 'error');
+    }
 }
 
 /**
@@ -426,11 +431,76 @@ function updateLastRefreshTime() {
 }
 
 /**
- * Refresh statistics counters
+ * Refresh statistics counters with real API data
  */
-function refreshStatistics() {
-    // In a full implementation, this would make AJAX calls to get updated stats
-    // For now, we'll simulate random updates
+async function refreshStatistics() {
+    try {
+        const response = await fetch('/api/dashboard/stats');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to get stats');
+        }
+        
+        const stats = data.stats;
+        
+        // Update each statistic with animation
+        const statMappings = {
+            'total_tasks': '.card-body h2:eq(0)',
+            'pending_tasks': '.card-body h2:eq(1)', 
+            'high_priority_messages': '.card-body h2:eq(2)',
+            'upcoming_events': '.card-body h2:eq(3)'
+        };
+        
+        // Update statistics with better selectors
+        updateStatistic('total_tasks', stats.total_tasks);
+        updateStatistic('pending_tasks', stats.pending_tasks);
+        updateStatistic('high_priority_messages', stats.high_priority_messages);
+        updateStatistic('upcoming_events', stats.upcoming_events);
+        
+    } catch (error) {
+        console.error('Error refreshing statistics:', error);
+        // Fall back to current behavior if API fails
+        fallbackStatisticsRefresh();
+    }
+}
+
+/**
+ * Update a specific statistic with animation
+ */
+function updateStatistic(statName, newValue) {
+    const statCards = document.querySelectorAll('.card-body');
+    let targetElement = null;
+    
+    // Find the correct card based on title text
+    statCards.forEach(card => {
+        const title = card.querySelector('.card-title');
+        if (title) {
+            const titleText = title.textContent.toLowerCase();
+            if ((statName === 'total_tasks' && titleText.includes('total tasks')) ||
+                (statName === 'pending_tasks' && titleText.includes('pending tasks')) ||
+                (statName === 'high_priority_messages' && titleText.includes('high priority')) ||
+                (statName === 'upcoming_events' && titleText.includes('upcoming events'))) {
+                targetElement = card.querySelector('h2');
+            }
+        }
+    });
+    
+    if (targetElement) {
+        const currentValue = parseInt(targetElement.textContent) || 0;
+        if (newValue !== currentValue) {
+            animateCounter(targetElement, currentValue, newValue);
+        }
+    }
+}
+
+/**
+ * Fallback statistics refresh (original behavior)
+ */
+function fallbackStatisticsRefresh() {
     const statElements = document.querySelectorAll('.card-body h2');
 
     statElements.forEach(element => {
@@ -517,27 +587,158 @@ function updateNotificationBadge(count) {
 }
 
 /**
- * Setup form validation
+ * Setup form validation with enhanced feedback
  */
 function setupFormValidation() {
-    const forms = document.querySelectorAll('form[data-validate="true"]');
+    const forms = document.querySelectorAll('form');
 
     forms.forEach(form => {
+        // Add real-time validation
+        const inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+            
+            input.addEventListener('input', function() {
+                // Clear validation state on input
+                this.classList.remove('is-invalid', 'is-valid');
+                const feedback = this.parentElement.querySelector('.invalid-feedback');
+                if (feedback) {
+                    feedback.style.display = 'none';
+                }
+            });
+        });
+
         form.addEventListener('submit', function(event) {
-            if (!form.checkValidity()) {
+            const isValid = validateForm(form);
+            
+            if (!isValid) {
                 event.preventDefault();
                 event.stopPropagation();
 
                 // Focus first invalid field
-                const firstInvalid = form.querySelector(':invalid');
+                const firstInvalid = form.querySelector('.is-invalid');
                 if (firstInvalid) {
                     firstInvalid.focus();
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+                showNotification('Please correct the errors in the form', 'error');
+            } else {
+                // Add loading state to submit button
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn && !submitBtn.disabled) {
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Processing...';
+                    submitBtn.disabled = true;
+                    
+                    // Restore after delay if form doesn't redirect
+                    setTimeout(() => {
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    }, 5000);
                 }
             }
 
             form.classList.add('was-validated');
         });
     });
+}
+
+/**
+ * Validate individual form field
+ */
+function validateField(field) {
+    const value = field.value.trim();
+    let isValid = true;
+    let message = '';
+    
+    // Required field validation
+    if (field.hasAttribute('required') && !value) {
+        isValid = false;
+        message = 'This field is required';
+    }
+    
+    // Email validation
+    else if (field.type === 'email' && value) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+            isValid = false;
+            message = 'Please enter a valid email address';
+        }
+    }
+    
+    // Phone validation
+    else if (field.type === 'tel' && value) {
+        const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/;
+        if (!phoneRegex.test(value)) {
+            isValid = false;
+            message = 'Please enter a valid phone number';
+        }
+    }
+    
+    // Text length validation
+    else if (field.type === 'text' && value) {
+        if (field.minLength && value.length < field.minLength) {
+            isValid = false;
+            message = `Minimum ${field.minLength} characters required`;
+        }
+        else if (field.maxLength && value.length > field.maxLength) {
+            isValid = false;
+            message = `Maximum ${field.maxLength} characters allowed`;
+        }
+    }
+    
+    // Update field validation state
+    updateFieldValidation(field, isValid, message);
+    
+    return isValid;
+}
+
+/**
+ * Validate entire form
+ */
+function validateForm(form) {
+    const fields = form.querySelectorAll('input, select, textarea');
+    let isFormValid = true;
+    
+    fields.forEach(field => {
+        const isFieldValid = validateField(field);
+        if (!isFieldValid) {
+            isFormValid = false;
+        }
+    });
+    
+    return isFormValid;
+}
+
+/**
+ * Update field validation visual state
+ */
+function updateFieldValidation(field, isValid, message) {
+    field.classList.remove('is-invalid', 'is-valid');
+    
+    // Remove existing feedback
+    let feedback = field.parentElement.querySelector('.invalid-feedback');
+    if (feedback) {
+        feedback.remove();
+    }
+    
+    if (!isValid) {
+        field.classList.add('is-invalid');
+        
+        // Add error message
+        feedback = document.createElement('div');
+        feedback.className = 'invalid-feedback';
+        feedback.textContent = message;
+        feedback.style.display = 'block';
+        field.parentElement.appendChild(feedback);
+    } else if (field.value.trim()) {
+        field.classList.add('is-valid');
+    }
 }
 
 /**

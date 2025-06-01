@@ -1,36 +1,83 @@
 from datetime import datetime
 from app import db
-from sqlalchemy import Text, DateTime, String, Integer, Boolean
+from sqlalchemy import Text, DateTime, String, Integer, Boolean, Index
 
 class Message(db.Model):
     """Model for storing incoming messages"""
+    __tablename__ = 'message'
+    
     id = db.Column(Integer, primary_key=True)
-    sender = db.Column(String(255), nullable=False)
+    sender = db.Column(String(255), nullable=False, index=True)
     content = db.Column(Text, nullable=False)
-    source = db.Column(String(50), nullable=False)  # 'text', 'email', 'teams', 'notes'
-    priority = db.Column(String(20), default='Low')  # 'High', 'Medium', 'Low'
-    processed = db.Column(Boolean, default=False)
-    created_at = db.Column(DateTime, default=datetime.utcnow)
+    source = db.Column(String(50), nullable=False, index=True)  # 'text', 'email', 'teams', 'notes'
+    priority = db.Column(String(20), default='Low', index=True)  # 'High', 'Medium', 'Low'
+    processed = db.Column(Boolean, default=False, index=True)
+    created_at = db.Column(DateTime, default=datetime.utcnow, index=True)
+    
+    # Add indexes for better query performance
+    __table_args__ = (
+        Index('idx_message_priority_processed', 'priority', 'processed'),
+        Index('idx_message_created_priority', 'created_at', 'priority'),
+    )
     
     def __repr__(self):
         return f'<Message {self.id}: {self.sender} - {self.priority}>'
+        
+    def to_dict(self):
+        """Convert message to dictionary for API responses"""
+        return {
+            'id': self.id,
+            'sender': self.sender,
+            'content': self.content,
+            'source': self.source,
+            'priority': self.priority,
+            'processed': self.processed,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
 
 class Task(db.Model):
     """Model for managing tasks"""
+    __tablename__ = 'task'
+    
     id = db.Column(Integer, primary_key=True)
-    title = db.Column(String(255), nullable=False)
+    title = db.Column(String(255), nullable=False, index=True)
     description = db.Column(Text)
-    facility = db.Column(String(100), nullable=False)
-    priority = db.Column(String(20), default='Medium')
-    status = db.Column(String(50), default='Not Started')  # 'Not Started', 'In Progress', 'Completed'
-    assigned_to = db.Column(String(100))
-    due_date = db.Column(DateTime)
-    created_at = db.Column(DateTime, default=datetime.utcnow)
+    facility = db.Column(String(100), nullable=False, index=True)
+    priority = db.Column(String(20), default='Medium', index=True)
+    status = db.Column(String(50), default='Not Started', index=True)  # 'Not Started', 'In Progress', 'Completed'
+    assigned_to = db.Column(String(100), index=True)
+    due_date = db.Column(DateTime, index=True)
+    created_at = db.Column(DateTime, default=datetime.utcnow, index=True)
     updated_at = db.Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    message_id = db.Column(Integer, db.ForeignKey('message.id'))
+    message_id = db.Column(Integer, db.ForeignKey('message.id', ondelete='SET NULL'))
+    
+    # Relationships
+    source_message = db.relationship('Message', backref='created_tasks', foreign_keys=[message_id])
+    
+    # Add indexes for better query performance
+    __table_args__ = (
+        Index('idx_task_status_facility', 'status', 'facility'),
+        Index('idx_task_priority_status', 'priority', 'status'),
+        Index('idx_task_assigned_status', 'assigned_to', 'status'),
+    )
     
     def __repr__(self):
         return f'<Task {self.id}: {self.title} - {self.status}>'
+        
+    def to_dict(self):
+        """Convert task to dictionary for API responses"""
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'facility': self.facility,
+            'priority': self.priority,
+            'status': self.status,
+            'assigned_to': self.assigned_to,
+            'due_date': self.due_date.isoformat() if self.due_date else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
 
 class CalendarEvent(db.Model):
     """Model for calendar events"""

@@ -52,3 +52,38 @@ class Config:
         'soon', 'tomorrow', 'schedule', 'meeting', 'appointment',
         'follow up', 'followup', 'review', 'check'
     ]
+    
+    @classmethod
+    def validate_config(cls):
+        """Validate configuration settings"""
+        errors = []
+        warnings = []
+        
+        # Check database URL
+        if not cls.DATABASE_URL:
+            errors.append("DATABASE_URL is not configured")
+        
+        # Check secret key
+        if not cls.SECRET_KEY or cls.SECRET_KEY == 'dev-secret-key':
+            warnings.append("SECRET_KEY should be changed from default in production")
+        
+        # Check iOS shortcut token
+        if not cls.IOS_SHORTCUT_TOKEN:
+            warnings.append("IOS_SHORTCUT_TOKEN is not configured - API endpoints will not work")
+        
+        # Check facilities configuration
+        if not cls.FACILITIES:
+            warnings.append("No facilities configured")
+        
+        # Print validation results
+        if errors:
+            print("Configuration ERRORS:")
+            for error in errors:
+                print(f"  - {error}")
+        
+        if warnings:
+            print("Configuration WARNINGS:")
+            for warning in warnings:
+                print(f"  - {warning}")
+        
+        return len(errors) == 0, errors, warnings

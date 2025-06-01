@@ -22,6 +22,11 @@ def create_app():
     app.secret_key = os.environ.get("SESSION_SECRET", Config.SECRET_KEY)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
     
+    # Validate configuration
+    is_valid, errors, warnings = Config.validate_config()
+    if not is_valid:
+        raise RuntimeError(f"Configuration errors found: {', '.join(errors)}")
+    
     # Initialize extensions
     db.init_app(app)
     
