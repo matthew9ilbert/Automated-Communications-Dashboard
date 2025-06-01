@@ -1,7 +1,10 @@
 import logging
+import time
 from datetime import datetime, timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED
+from apscheduler.executors.pool import ThreadPoolExecutor
 from models import Reminder, Task, CalendarEvent, db
 from message_scanner import message_scanner
 from config import Config
@@ -13,7 +16,21 @@ class SchedulerService:
     
     def __init__(self, app):
         self.app = app
-        self.scheduler = BackgroundScheduler()
+        self.scheduler = BackgroundScheduler(
+            executors={
+                'default': ThreadPoolExecutor(20)
+            },
+            job_defaults={
+                'coalesce': True,
+                'max_instances': 1,
+                'misfire_grace_time': 60
+            }
+        )
+        
+        # Add event listeners
+        self.scheduler.add_listener(self._job_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
+        
+        # Start the scheduler
         self.scheduler.start()
         
         # Schedule message scanning
@@ -22,7 +39,8 @@ class SchedulerService:
             trigger=IntervalTrigger(minutes=Config.SCAN_INTERVAL_MINUTES),
             id='message_scanner',
             name='Scan incoming messages',
-            replace_existing=True
+            replace_existing=True,
+            max_instances=1
         )
         
         # Schedule reminder checking
@@ -31,10 +49,19 @@ class SchedulerService:
             trigger=IntervalTrigger(minutes=5),  # Check every 5 minutes
             id='reminder_checker',
             name='Check pending reminders',
-            replace_existing=True
+            replace_existing=True,
+            max_instances=1
         )
         
         logger.info("Scheduler initialized with message scanning and reminder checking")
+    
+    def _job_listener(self, event):
+        """Handle scheduler events"""
+        if event.exception:
+            logger.error(f'Job {event.job_id} failed: {event.exception}')
+            logger.error(f'Traceback: {event.traceback}')
+        else:
+            logger.debug(f'Job {event.job_id} executed successfully')
     
     def scan_messages_job(self):
         """Scheduled job to scan for new messages"""
@@ -51,6 +78,26 @@ class SchedulerService:
                 
         except Exception as e:
             logger.error(f"Error in scheduled message scan: {e}")
+            # Attempt recovery
+            self._handle_scan_error(e)
+    
+    def _handle_scan_error(self, error):
+        """Handle message scanning errors"""
+        try:
+            # Log the error
+            logger.error(f"Message scanning error: {str(error)}")
+            
+            # Attempt to recover database connection
+            try:
+                db.session.rollback()
+            except Exception as db_error:
+                logger.error(f"Database recovery failed: {str(db_error)}")
+            
+            # Wait before retrying
+            time.sleep(5)
+            
+        except Exception as recovery_error:
+            logger.error(f"Error recovery failed: {str(recovery_error)}")
     
     def process_message_actions(self, processing_result: dict):
         """Process actions identified from message scanning"""
@@ -107,6 +154,7 @@ class SchedulerService:
         except Exception as e:
             logger.error(f"Error processing message actions: {e}")
             db.session.rollback()
+            raise
     
     def check_reminders_job(self):
         """Scheduled job to check for pending reminders"""
@@ -121,13 +169,37 @@ class SchedulerService:
                 ).all()
                 
                 for reminder in pending_reminders:
-                    self.process_reminder(reminder)
+                    try:
+                        self.process_reminder(reminder)
+                    except Exception as reminder_error:
+                        logger.error(f"Error processing reminder {reminder.id}: {reminder_error}")
+                        continue
                 
                 if pending_reminders:
                     logger.info(f"Processed {len(pending_reminders)} pending reminders")
                 
         except Exception as e:
             logger.error(f"Error checking reminders: {e}")
+            # Attempt recovery
+            self._handle_reminder_error(e)
+    
+    def _handle_reminder_error(self, error):
+        """Handle reminder checking errors"""
+        try:
+            # Log the error
+            logger.error(f"Reminder checking error: {str(error)}")
+            
+            # Attempt to recover database connection
+            try:
+                db.session.rollback()
+            except Exception as db_error:
+                logger.error(f"Database recovery failed: {str(db_error)}")
+            
+            # Wait before retrying
+            time.sleep(5)
+            
+        except Exception as recovery_error:
+            logger.error(f"Error recovery failed: {str(recovery_error)}")
     
     def process_reminder(self, reminder: Reminder):
         """Process a single reminder"""
@@ -150,18 +222,26 @@ class SchedulerService:
         except Exception as e:
             logger.error(f"Error processing reminder {reminder.id}: {e}")
             db.session.rollback()
+            raise
     
     def shutdown(self):
         """Shutdown the scheduler"""
-        if self.scheduler.running:
-            self.scheduler.shutdown()
-            logger.info("Scheduler shut down")
+        try:
+            if self.scheduler.running:
+                self.scheduler.shutdown(wait=True)
+                logger.info("Scheduler shut down successfully")
+        except Exception as e:
+            logger.error(f"Error during scheduler shutdown: {e}")
 
 def init_scheduler(app):
     """Initialize the scheduler with the Flask app"""
-    scheduler_service = SchedulerService(app)
-    
-    # Store reference to scheduler in app for cleanup
-    app.scheduler_service = scheduler_service
-    
-    return scheduler_service
+    try:
+        scheduler_service = SchedulerService(app)
+        
+        # Store reference to scheduler in app for cleanup
+        app.scheduler_service = scheduler_service
+        
+        return scheduler_service
+    except Exception as e:
+        logger.error(f"Failed to initialize scheduler: {e}")
+        raise

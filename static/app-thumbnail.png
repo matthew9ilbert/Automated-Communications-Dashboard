@@ -1,0 +1,123 @@
+
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="thumbnailBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1d29;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#2d3748;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5b73e8;stop-opacity:1" />
+    </linearGradient>
+    <filter id="thumbnailGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#thumbnailBg)"/>
+  
+  <!-- Subtle tech pattern -->
+  <pattern id="techPattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+    <circle cx="30" cy="30" r="1" fill="rgba(255,255,255,0.08)"/>
+    <rect x="25" y="25" width="10" height="10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#techPattern)"/>
+  
+  <!-- Main content container -->
+  <rect x="80" y="80" width="1040" height="470" fill="rgba(255,255,255,0.95)" rx="25"/>
+  
+  <!-- Hero icon on left -->
+  <g filter="url(#thumbnailGlow)">
+    <circle cx="280" cy="315" r="120" fill="url(#heroGradient)"/>
+    
+    <!-- Dashboard screen -->
+    <rect x="220" y="255" width="120" height="80" fill="white" rx="8"/>
+    
+    <!-- Dashboard charts -->
+    <rect x="230" y="270" width="20" height="20" fill="#667eea" rx="2"/>
+    <rect x="255" y="275" width="20" height="15" fill="#5b73e8" rx="2"/>
+    <rect x="280" y="265" width="20" height="25" fill="#764ba2" rx="2"/>
+    <rect x="305" y="280" width="20" height="10" fill="#667eea" rx="2"/>
+    
+    <!-- Data connections -->
+    <line x1="240" y1="295" x2="265" y2="295" stroke="#667eea" stroke-width="2"/>
+    <line x1="265" y1="295" x2="290" y2="295" stroke="#667eea" stroke-width="2"/>
+    <line x1="290" y1="295" x2="315" y2="295" stroke="#667eea" stroke-width="2"/>
+    
+    <!-- Communication elements -->
+    <ellipse cx="200" cy="350" rx="25" ry="18" fill="white" stroke="#667eea" stroke-width="2"/>
+    <ellipse cx="360" cy="350" rx="25" ry="18" fill="white" stroke="#764ba2" stroke-width="2"/>
+    
+    <!-- Message indicators -->
+    <circle cx="195" cy="345" r="2" fill="#667eea"/>
+    <circle cx="200" cy="345" r="2" fill="#667eea"/>
+    <circle cx="205" cy="345" r="2" fill="#667eea"/>
+    
+    <circle cx="355" cy="345" r="2" fill="#764ba2"/>
+    <circle cx="360" cy="345" r="2" fill="#764ba2"/>
+    <circle cx="365" cy="345" r="2" fill="#764ba2"/>
+    
+    <!-- Database elements -->
+    <ellipse cx="220" cy="390" rx="20" ry="6" fill="white" stroke="#667eea" stroke-width="2"/>
+    <rect x="200" y="384" width="40" height="20" fill="white" stroke="#667eea" stroke-width="2"/>
+    <ellipse cx="220" cy="404" rx="20" ry="6" fill="white" stroke="#667eea" stroke-width="2"/>
+    
+    <ellipse cx="340" cy="390" rx="20" ry="6" fill="white" stroke="#764ba2" stroke-width="2"/>
+    <rect x="320" y="384" width="40" height="20" fill="white" stroke="#764ba2" stroke-width="2"/>
+    <ellipse cx="340" cy="404" rx="20" ry="6" fill="white" stroke="#764ba2" stroke-width="2"/>
+  </g>
+  
+  <!-- Title and description -->
+  <text x="450" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="700" fill="#1a1d29">EVS Manager</text>
+  <text x="450" y="310" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="400" fill="#4a5568">Healthcare Communications & Dashboard Platform</text>
+  
+  <!-- Feature highlights with icons -->
+  <g transform="translate(450, 350)">
+    <!-- Real-time Dashboard -->
+    <circle cx="0" cy="0" r="12" fill="#667eea"/>
+    <rect x="-6" y="-4" width="12" height="8" fill="white" rx="1"/>
+    <rect x="-4" y="-2" width="2" height="2" fill="#667eea"/>
+    <rect x="-1" y="-1" width="2" height="1" fill="#667eea"/>
+    <rect x="2" y="-3" width="2" height="3" fill="#667eea"/>
+    <text x="25" y="6" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#4a5568">Real-time Dashboard & Analytics</text>
+    
+    <!-- Message Management -->
+    <circle cx="0" cy="45" r="12" fill="#764ba2"/>
+    <ellipse cx="0" cy="45" rx="8" ry="6" fill="white"/>
+    <circle cx="-3" cy="43" r="1" fill="#764ba2"/>
+    <circle cx="0" cy="43" r="1" fill="#764ba2"/>
+    <circle cx="3" cy="43" r="1" fill="#764ba2"/>
+    <text x="25" y="51" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#4a5568">Smart Message Processing & Workflows</text>
+    
+    <!-- Database Integration -->
+    <circle cx="0" cy="90" r="12" fill="#5b73e8"/>
+    <ellipse cx="0" cy="87" rx="6" ry="2" fill="white"/>
+    <rect x="-6" y="85" width="12" height="6" fill="white"/>
+    <ellipse cx="0" cy="91" rx="6" ry="2" fill="white"/>
+    <text x="25" y="96" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#4a5568">Integrated Database Management</text>
+  </g>
+  
+  <!-- Decorative tech elements -->
+  <g opacity="0.15">
+    <circle cx="950" cy="150" r="80" fill="none" stroke="#667eea" stroke-width="2"/>
+    <circle cx="950" cy="150" r="60" fill="none" stroke="#764ba2" stroke-width="1"/>
+    <circle cx="950" cy="150" r="40" fill="none" stroke="#5b73e8" stroke-width="1"/>
+    
+    <rect x="1050" y="450" width="60" height="60" fill="none" stroke="#667eea" stroke-width="2" rx="8"/>
+    <rect x="1060" y="460" width="40" height="40" fill="none" stroke="#764ba2" stroke-width="1" rx="4"/>
+    
+    <circle cx="150" cy="120" r="40" fill="none" stroke="#5b73e8" stroke-width="1"/>
+    <circle cx="120" cy="500" r="30" fill="none" stroke="#667eea" stroke-width="1"/>
+  </g>
+  
+  <!-- Subtle brand accent -->
+  <rect x="80" y="80" width="1040" height="4" fill="url(#heroGradient)" rx="2"/>
+</svg>

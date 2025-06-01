@@ -4,12 +4,12 @@
 
 {% block content %}
 <div class="container">
-    <!-- Page Header -->
+    <!-- Action Buttons -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2">
-            <i class="fas fa-envelope me-2"></i>
-            Message Management
-        </h1>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>
+            Back to Dashboard
+        </a>
         <div class="btn-group" role="group">
             <button type="button" class="btn btn-outline-primary" onclick="scanMessages()">
                 <i class="fas fa-sync-alt me-1"></i>
@@ -30,7 +30,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h5 class="card-title text-danger">High Priority</h5>
-                            <h2 class="mb-0">{{ messages|selectattr('priority', 'equalto', 'High')|list|length }}</h2>
+                            <h2 class="mb-0 text-danger">{{ messages|selectattr('priority', 'equalto', 'High')|list|length }}</h2>
                         </div>
                         <div class="text-danger">
                             <i class="fas fa-exclamation-triangle fa-2x"></i>
@@ -41,14 +41,14 @@
         </div>
         
         <div class="col-xl-3 col-md-6 mb-3">
-            <div class="card border-warning">
+            <div class="card border-orange">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h5 class="card-title text-warning">Medium Priority</h5>
-                            <h2 class="mb-0">{{ messages|selectattr('priority', 'equalto', 'Medium')|list|length }}</h2>
+                            <h5 class="card-title text-orange">Medium Priority</h5>
+                            <h2 class="mb-0 text-orange">{{ messages|selectattr('priority', 'equalto', 'Medium')|list|length }}</h2>
                         </div>
-                        <div class="text-warning">
+                        <div class="text-orange">
                             <i class="fas fa-exclamation-circle fa-2x"></i>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h5 class="card-title text-info">Unprocessed</h5>
-                            <h2 class="mb-0">{{ messages|selectattr('processed', 'equalto', false)|list|length }}</h2>
+                            <h2 class="mb-0 text-info">{{ messages|selectattr('processed', 'equalto', false)|list|length }}</h2>
                         </div>
                         <div class="text-info">
                             <i class="fas fa-clock fa-2x"></i>
@@ -78,7 +78,7 @@
                     <div class="d-flex justify-content-between">
                         <div>
                             <h5 class="card-title text-success">Total Messages</h5>
-                            <h2 class="mb-0">{{ messages.items|length if messages and messages.items else 0 }}</h2>
+                            <h2 class="mb-0 text-success">{{ messages.items|length if messages and messages.items else 0 }}</h2>
                         </div>
                         <div class="text-success">
                             <i class="fas fa-envelope fa-2x"></i>

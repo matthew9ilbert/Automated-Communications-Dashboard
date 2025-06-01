@@ -11,27 +11,52 @@ logger = logging.getLogger(__name__)
 
 class MessageScanner:
     """Service for scanning and processing messages"""
-    
+
     def __init__(self):
         self.high_priority_keywords = [keyword.lower() for keyword in Config.HIGH_PRIORITY_KEYWORDS]
         self.medium_priority_keywords = [keyword.lower() for keyword in Config.MEDIUM_PRIORITY_KEYWORDS]
-    
+
     def determine_priority(self, content: str) -> str:
-        """Determine message priority based on keywords"""
+        """Determine message priority based on content"""
         content_lower = content.lower()
-        
+
         # Check for high priority keywords
         for keyword in self.high_priority_keywords:
             if keyword in content_lower:
                 return 'High'
-        
+
         # Check for medium priority keywords
         for keyword in self.medium_priority_keywords:
             if keyword in content_lower:
                 return 'Medium'
-        
+
         return 'Low'
-    
+
+    def suggest_actions(self, content: str) -> List[str]:
+        """Suggest actions based on message content"""
+        content_lower = content.lower()
+        suggestions = []
+
+        if any(word in content_lower for word in ['meeting', 'schedule', 'appointment', 'calendar']):
+            suggestions.append('Create calendar event')
+
+        if any(word in content_lower for word in ['task', 'todo', 'do', 'complete', 'finish']):
+            suggestions.append('Create task')
+
+        if any(word in content_lower for word in ['remind', 'reminder', 'remember', 'don\'t forget']):
+            suggestions.append('Set reminder')
+
+        if any(word in content_lower for word in ['urgent', 'asap', 'emergency', 'critical']):
+            suggestions.append('Notify staff immediately')
+
+        if any(word in content_lower for word in ['document', 'report', 'write', 'notes']):
+            suggestions.append('Create document')
+
+        if any(word in content_lower for word in ['email', 'send', 'notify', 'contact']):
+            suggestions.append('Send notification')
+
+        return suggestions
+
     def extract_datetime_info(self, content: str) -> Optional[datetime]:
         """Extract datetime information from message content"""
         try:
@@ -42,15 +67,15 @@ class MessageScanner:
                 r'(today|tomorrow)\s+(\d{1,2}):(\d{2})\s*(AM|PM)?',  # today/tomorrow HH:MM
                 r'(\d{1,2}):(\d{2})\s*(AM|PM)',  # HH:MM AM/PM (assumes today)
             ]
-            
+
             content_lower = content.lower()
-            
+
             for pattern in patterns:
                 match = re.search(pattern, content_lower)
                 if match:
                     try:
                         groups = match.groups()
-                        
+
                         if 'today' in groups[0] if groups else False:
                             date_part = datetime.now().date()
                             hour = int(groups[1])
@@ -60,7 +85,7 @@ class MessageScanner:
                             elif len(groups) > 3 and groups[3] and 'am' in groups[3].lower() and hour == 12:
                                 hour = 0
                             return datetime.combine(date_part, datetime.min.time().replace(hour=hour, minute=minute))
-                        
+
                         elif 'tomorrow' in groups[0] if groups else False:
                             date_part = (datetime.now() + timedelta(days=1)).date()
                             hour = int(groups[1])
@@ -70,7 +95,7 @@ class MessageScanner:
                             elif len(groups) > 3 and groups[3] and 'am' in groups[3].lower() and hour == 12:
                                 hour = 0
                             return datetime.combine(date_part, datetime.min.time().replace(hour=hour, minute=minute))
-                        
+
                         elif len(groups) >= 5:  # Full date pattern
                             month, day, year = int(groups[0]), int(groups[1]), int(groups[2])
                             hour, minute = int(groups[3]), int(groups[4])
@@ -79,7 +104,7 @@ class MessageScanner:
                             elif len(groups) > 5 and groups[5] and 'am' in groups[5].lower() and hour == 12:
                                 hour = 0
                             return datetime(year, month, day, hour, minute)
-                        
+
                         elif len(groups) >= 2:  # Time only pattern
                             hour = int(groups[0])
                             minute = int(groups[1])
@@ -89,24 +114,24 @@ class MessageScanner:
                                 hour = 0
                             today = datetime.now().date()
                             return datetime.combine(today, datetime.min.time().replace(hour=hour, minute=minute))
-                    
+
                     except (ValueError, IndexError):
                         continue
-            
+
             return None
-            
+
         except Exception as e:
             logger.error(f"Error extracting datetime from content: {e}")
             return None
-    
+
     def extract_facility_info(self, content: str) -> str:
         """Extract facility information from message content"""
         content_lower = content.lower()
-        
+
         for facility in Config.FACILITIES:
             if facility.lower() in content_lower:
                 return facility
-        
+
         # Look for common facility indicators
         facility_keywords = {
             'bellevue': 'Bellevue Medical Center',
@@ -116,13 +141,13 @@ class MessageScanner:
             'clinic d': 'Clinic D',
             'main': 'Bellevue Medical Center'
         }
-        
+
         for keyword, facility in facility_keywords.items():
             if keyword in content_lower:
                 return facility
-        
+
         return 'Bellevue Medical Center'  # Default facility
-    
+
     def is_task_related(self, content: str) -> bool:
         """Determine if message content indicates a task"""
         task_indicators = [
@@ -131,10 +156,10 @@ class MessageScanner:
             'repair', 'fix', 'check', 'inspection', 'audit', 'coverage',
             'staff', 'help', 'assist', 'complete', 'finish', 'do'
         ]
-        
+
         content_lower = content.lower()
         return any(indicator in content_lower for indicator in task_indicators)
-    
+
     def is_event_related(self, content: str) -> bool:
         """Determine if message content indicates a calendar event"""
         event_indicators = [
@@ -142,10 +167,10 @@ class MessageScanner:
             'training', 'conference', 'call', 'visit', 'at', 'on',
             'deadline', 'due', 'reminder'
         ]
-        
+
         content_lower = content.lower()
         return any(indicator in content_lower for indicator in event_indicators)
-    
+
     def process_message(self, message: Message) -> Dict[str, any]:
         """Process a message and determine appropriate actions"""
         try:
@@ -154,12 +179,12 @@ class MessageScanner:
                 'actions': [],
                 'suggestions': []
             }
-            
+
             # Check if it's task-related
             if self.is_task_related(message.content):
                 task_title = self._extract_task_title(message.content)
                 facility = self.extract_facility_info(message.content)
-                
+
                 result['actions'].append({
                     'type': 'task',
                     'title': task_title,
@@ -167,14 +192,14 @@ class MessageScanner:
                     'facility': facility,
                     'priority': message.priority
                 })
-            
+
             # Check if it's event-related
             if self.is_event_related(message.content):
                 event_time = self.extract_datetime_info(message.content)
                 if event_time:
                     event_title = self._extract_event_title(message.content)
                     location = self.extract_facility_info(message.content)
-                    
+
                     result['actions'].append({
                         'type': 'event',
                         'title': event_title,
@@ -183,34 +208,34 @@ class MessageScanner:
                         'end_time': event_time + timedelta(hours=1),  # Default 1 hour duration
                         'location': location
                     })
-            
+
             # Add suggestions based on content analysis
             if message.priority == 'High':
                 result['suggestions'].append('Consider immediate response required')
-            
+
             if any(keyword in message.content.lower() for keyword in ['coverage', 'staff', 'assign']):
                 result['suggestions'].append('May require staff assignment')
-            
+
             return result
-            
+
         except Exception as e:
             logger.error(f"Error processing message {message.id}: {e}")
             return {'message_id': message.id, 'actions': [], 'suggestions': []}
-    
+
     def _extract_task_title(self, content: str) -> str:
         """Extract a meaningful task title from content"""
         # Split content into sentences and find the most relevant one
         sentences = re.split(r'[.!?]+', content)
-        
+
         for sentence in sentences:
             sentence = sentence.strip()
             if any(word in sentence.lower() for word in ['need', 'clean', 'fix', 'check', 'repair']):
                 return sentence[:100] + '...' if len(sentence) > 100 else sentence
-        
+
         # Fallback: use first sentence or truncated content
         first_sentence = sentences[0].strip() if sentences else content
         return first_sentence[:100] + '...' if len(first_sentence) > 100 else first_sentence
-    
+
     def _extract_event_title(self, content: str) -> str:
         """Extract a meaningful event title from content"""
         # Look for meeting/event related phrases
@@ -218,21 +243,21 @@ class MessageScanner:
             r'(meeting|appointment|audit|inspection|training|conference).{0,50}',
             r'(schedule|plan).{0,30}(meeting|appointment|audit|inspection)',
         ]
-        
+
         content_lower = content.lower()
         for pattern in patterns:
             match = re.search(pattern, content_lower)
             if match:
                 return match.group(0).strip().title()
-        
+
         # Fallback: use first part of content
         first_part = content.split('.')[0].strip()
         return first_part[:100] + '...' if len(first_part) > 100 else first_part
-    
+
     def scan_incoming_messages(self) -> List[Dict]:
         """Scan for new incoming messages from various sources"""
         results = []
-        
+
         try:
             # Scan emails from Microsoft Graph
             emails = graph_service.get_recent_emails(max_results=5)
@@ -242,12 +267,12 @@ class MessageScanner:
                     source='email',
                     content=email.get('bodyPreview', '')[:500]
                 ).first()
-                
+
                 if not existing:
                     sender = email.get('from', {}).get('emailAddress', {}).get('address', 'Unknown')
                     content = email.get('bodyPreview', '')
                     priority = self.determine_priority(content)
-                    
+
                     # Create message record
                     message = Message(
                         sender=sender,
@@ -257,20 +282,20 @@ class MessageScanner:
                     )
                     db.session.add(message)
                     db.session.commit()
-                    
+
                     # Log to Google Sheets
                     sheets_service.log_message(sender, content, 'email', priority)
-                    
+
                     # Process for actions
                     processing_result = self.process_message(message)
                     results.append(processing_result)
-            
+
             # Note: Teams messages would require additional configuration and permissions
             # This is a placeholder for when those are available
-            
+
             logger.info(f"Scanned and processed {len(results)} new messages")
             return results
-            
+
         except Exception as e:
             logger.error(f"Error scanning incoming messages: {e}")
             return results
